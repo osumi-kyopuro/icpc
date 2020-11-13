@@ -1,0 +1,98 @@
+<body>
+    <div id="headline">
+        <h1>CSS入門</h1>
+        <p>これは段落です。</p>
+    </div>
+    <div class="main">
+        <h2>これは見出しです。</h2>
+        <p>これは<span class="light">例</span>です。</p>
+        <p>
+            <a href="https://saruwakakun.com/">ホームへ</a>
+            戻ります。</p>
+    </div>
+    <p>初期設定のフォントサイズ</p>
+    <p class="px">20pxにした場合</p>
+    <p class="em">1.2emにした場合</p>
+    <p>通常の文字</p>
+    <p id="example1">greenの文字</p>
+    <p id="example2">#FFC778の文字</p>
+    <p id="example3">#f89174の文字</p>
+    <p>CSS指定なしの文</p>
+    <p class="center">中央寄せの文</p>
+    <p class="right">右寄せの文</p>
+    <p class="solid">solid 2px grayの場合</p>
+    <p class="dotted">dotted 2px grayの場合</p>
+    <p class="dashed">dashed 2px grayの場合</p>
+    <p class="double">double 2px grayの場合</p>
+    <p class="px1">solid 1px orangeの場合</p>
+    <p class="rei1">上と左にだけ線</p>
+    <p class="rei2">下と右にだけ線</p>
+</body>
+
+<style>
+    .main {
+        color: orange;
+    }
+
+    .px {
+        font-size: 20px;
+    }
+
+    .em {
+        font-size: 1.2em;
+    }
+
+    #example1 {
+        color: green;
+    }
+
+    #example2 {
+        color: #FFC778;
+    }
+
+    #example3 {
+        color: #f89174;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .right {
+        text-align: right;
+    }
+
+    .main {
+        background-color: #FFC778;
+    }
+
+    .solid {
+        border: solid 2px gray;
+    }
+
+    .dotted {
+        border: dotted 2px gray;
+    }
+
+    .dashed {
+        border: dashed 2px gray;
+    }
+
+    .double {
+        border: double 5px gray;
+    }
+
+    .px1 {
+        border: solid 1px orange;
+    }
+
+    .rei1 {
+        border-top: solid 2px #FFA07A;
+        border-left: solid 2px #FFA07A;
+    }
+
+    .rei2 {
+        border-bottom: solid 2px #FFA07A;
+        border-right: solid 2px #FFA07A;
+    }
+</style>
