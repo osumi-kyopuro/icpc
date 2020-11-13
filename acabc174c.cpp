@@ -435,51 +435,39 @@ struct all_init
 } All_init;
 
 //Bit
-// 1-indexedなので注意。
- struct BIT {
-  private:
-   vector<int> bit;
-   int N;
+template <class T = long long int>
+class Bit {
+    private:
+    unsigned len;
+    T init;
+    std::vector<T> arr;
  
-  public:
-   BIT(int size) {
-     N = size;
-     bit.resize(N + 1);
-   }
- 
-   // 一点更新です
-   void add(int a, int w) {
-     for (int x = a; x <= N; x += x & -x) bit[x] += w;
-   }
- 
-   // 1~Nまでの和を求める。
-   int sum(int a) {
-     int ret = 0;
-     for (int x = a; x > 0; x -= x & -x) ret += bit[x];
-     return ret;
-   }
- };
-
-
-
-
+    public:
+    Bit(unsigned length, T initialValue = 0): len(length), init(initialValue), arr(len + 1, init) {}
+    void update(unsigned a, T newval) {
+        for (unsigned x = a; x <= len; x += x & -x) arr[x] += newval;
+    }
+    T query(unsigned a) const {
+        T ret = init;
+        for (unsigned x = a; x > 0; x -= x & -x) ret += arr[x];
+        return ret;
+    }
+};
 
 
 
 
 int main() {
-    ll n;
-    cin>>n;
-    V a(n);
-    rep(i,0,n){
-        cin>>a[i];
+    ll k,val=7;
+    cin>>k;
+    val=val%k;
+    rep(i,1,k+1){
+        if(val==0){
+            cout<<i<<endl;
+            exit(0);
+        }
+        val=(val*10+7)%k;
     }
-    ll mx=0,ans=0,cn=0,cnt=0;
-    rep(i,0,n){
-        cn+=a[i];
-        mx=max(cn,mx);
-        ans=max(cnt+mx,ans);
-        cnt+=cn;
-    }
-    cout<<ans<<endl;
+    cout<<-1<<endl;
+    
 }

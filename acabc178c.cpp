@@ -463,23 +463,21 @@ struct all_init
 
 
 
-
-
-
-
 int main() {
     ll n;
     cin>>n;
-    V a(n);
+    ll a=0;
+    ll x=1,y=2,z=1;
     rep(i,0,n){
-        cin>>a[i];
+        x=(x*10)%mod;
+        y=(y*9)%mod;
+        z=(z*8)%mod;
     }
-    ll mx=0,ans=0,cn=0,cnt=0;
-    rep(i,0,n){
-        cn+=a[i];
-        mx=max(cn,mx);
-        ans=max(cnt+mx,ans);
-        cnt+=cn;
+    a=(x+z)%mod;
+    a=(a-y)%mod;
+    if(a<0){
+        a+=mod;
     }
-    cout<<ans<<endl;
+    cout<<a<<endl;
+
 }

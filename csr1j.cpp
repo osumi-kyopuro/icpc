@@ -463,23 +463,19 @@ struct all_init
 
 
 
-
-
-
-
 int main() {
-    ll n;
+    ll n,tmp,cnt=0;
     cin>>n;
     V a(n);
     rep(i,0,n){
         cin>>a[i];
     }
-    ll mx=0,ans=0,cn=0,cnt=0;
+    BIT bit(n+10);
+    ll ans=0;
     rep(i,0,n){
-        cn+=a[i];
-        mx=max(cn,mx);
-        ans=max(cnt+mx,ans);
-        cnt+=cn;
+        ans+=i-bit.sum(a[i]);
+        bit.add(a[i],1);
     }
     cout<<ans<<endl;
+    
 }

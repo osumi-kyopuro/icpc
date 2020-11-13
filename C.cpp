@@ -468,18 +468,28 @@ struct all_init
 
 
 int main() {
-    ll n;
-    cin>>n;
-    V a(n);
-    rep(i,0,n){
-        cin>>a[i];
+    V ans;
+    while(true){
+        ll m,n,p;
+        cin>>m>>n>>p;
+        if(m==0&&n==0&&p==0){
+            break;
+        }
+        set<int> s;
+        s.insert(p);
+        if(n!=0){
+            for(ll i=0;i<n;i++){
+                ll a,b;
+                cin>>a>>b;
+                if(!(s.find(a)==s.end()&&s.find(b)==s.end())){
+                    s.insert(a);
+                    s.insert(b);
+                }
+            }
+        }
+        ans.emplace_back(s.size());
     }
-    ll mx=0,ans=0,cn=0,cnt=0;
-    rep(i,0,n){
-        cn+=a[i];
-        mx=max(cn,mx);
-        ans=max(cnt+mx,ans);
-        cnt+=cn;
+    rep(i,0,ans.size()){
+        cout<<ans[i]<<endl;
     }
-    cout<<ans<<endl;
 }

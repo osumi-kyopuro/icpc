@@ -17,7 +17,6 @@
 #include <cstdint>
 #include <cfenv>
 #include <list>
-#include<string.h>
 #include <iterator>
 #define ll long long
 #define rep(i, s, n) for (ll i = (ll)(s); i < (ll)(n); i++)
@@ -32,7 +31,7 @@
 #define B vector<bool>
 #define endl '\n'
 const ll MAX = 510000;
-const ll MOD =1000000007;
+const ll MOD = 1000000007;
 using namespace std;
 using graph = vector<vector<ll>>;
 struct edge{
@@ -96,9 +95,9 @@ void cominit()
     inv[1] = 1;
     for (ll i = 2; i < MAX; i++)
     {
-        fac[i] = fac[i - 1] * i% MOD;
-        inv[i] = MOD - inv[MOD % i] * (MOD / i)% MOD;
-        finv[i] = finv[i - 1] * inv[i]% MOD;
+        fac[i] = fac[i - 1] * i % MOD;
+        inv[i] = MOD - inv[MOD % i] * (MOD / i) % MOD;
+        finv[i] = finv[i - 1] * inv[i] % MOD;
     }
 }
 
@@ -127,7 +126,7 @@ ll com(ll n, ll k)
         return 0;
     if (n < 0 || k < 0)
         return 0;
-    return fac[n] * (finv[k] * finv[n - k]% MOD) % MOD;
+    return fac[n] * (finv[k] * finv[n - k] % MOD) % MOD;
 }
 //二項係数nCk,n<=10^9,k<=10^7まで
 ll com2(ll n,ll k){
@@ -384,14 +383,6 @@ ll Keta(ll x){
     return cnt;
 }
 
-bool is_prime(long long N) {
-    if (N == 1) return false;
-    for (long long i = 2; i * i <= N; ++i) {
-        if (N % i == 0) return false;
-    }
-    return true;
-}
-
 //多倍長整数対策
 std::ostream &operator<<(std::ostream &dest, __int128_t value) {
   std::ostream::sentry s(dest);
@@ -430,56 +421,76 @@ struct all_init
 {
     all_init()
     {
-        cout << fixed << setprecision(6);
+        cout << fixed << setprecision(12);
     }
 } All_init;
 
 //Bit
-// 1-indexedなので注意。
- struct BIT {
-  private:
-   vector<int> bit;
-   int N;
+template <class T = long long int>
+class Bit {
+    private:
+    unsigned len;
+    T init;
+    std::vector<T> arr;
  
-  public:
-   BIT(int size) {
-     N = size;
-     bit.resize(N + 1);
-   }
- 
-   // 一点更新です
-   void add(int a, int w) {
-     for (int x = a; x <= N; x += x & -x) bit[x] += w;
-   }
- 
-   // 1~Nまでの和を求める。
-   int sum(int a) {
-     int ret = 0;
-     for (int x = a; x > 0; x -= x & -x) ret += bit[x];
-     return ret;
-   }
- };
+    public:
+    Bit(unsigned length, T initialValue = 0): len(length), init(initialValue), arr(len + 1, init) {}
+    void update(unsigned a, T newval) {
+        for (unsigned x = a; x <= len; x += x & -x) arr[x] += newval;
+    }
+    T query(unsigned a) const {
+        T ret = init;
+        for (unsigned x = a; x > 0; x -= x & -x) ret += arr[x];
+        return ret;
+    }
+};
 
-
-
-
-
+bool is_prime(long long N) {
+    if (N == 1) return false;
+    for (long long i = 2; i * i <= N; ++i) {
+        if (N % i == 0) return false;
+    }
+    return true;
+}
 
 
 
 int main() {
-    ll n;
-    cin>>n;
-    V a(n);
+    ll n,l;
+    cin>>n>>l;
+    V x(l+1,0),t(3);
     rep(i,0,n){
-        cin>>a[i];
+        ll a;
+        cin>>a;
+        x[a]++;
     }
-    ll mx=0,ans=0,cn=0,cnt=0;
-    rep(i,0,n){
-        cn+=a[i];
-        mx=max(cn,mx);
-        ans=max(cnt+mx,ans);
-        cnt+=cn;
+    rep(i,0,3){
+        cin>>t[i];
     }
-    cout<<ans<<endl;
+    rep(i,1,l){
+        x[i]*=t[2];
+    }
+    V dp(l+1,LLONG_MAX);
+    dp[0]=0;
+    rep(i,0,l){
+        dp[i+1]=min(dp[i]+t[0]+x[i+1],dp[i+1]);
+        if(i+2<=l){
+            dp[i+2]=min(dp[i]+t[0]+t[1]+x[i+2],dp[i+2]);
+        }
+        else{
+            dp[l]=min(dp[i]+t[0]/2+t[1]/2,dp[l]);
+        }
+        if(i+4<=l){
+            dp[i+4]=min(dp[i]+t[0]+3*t[1]+x[i+4],dp[i+4]);
+        }     
+        else{
+            dp[l]=min(dp[i]+t[0]/2+t[1]/2+t[1]*(l-i-1),dp[l]);
+        }  
+    }
+    cout<<dp[l]<<endl;
+
+    
+    
 }
+
+
