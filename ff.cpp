@@ -430,7 +430,7 @@ struct all_init
 {
     all_init()
     {
-        cout << fixed << setprecision(9);
+        cout << fixed << setprecision(6);
     }
 } All_init;
 
@@ -468,7 +468,39 @@ struct all_init
 
 
 int main() {
-    
-    
+    string s;
+    cin>>s;
+    vector<double> ans(5,0);
+    rep(i,0,5){
+        vector<double> c(6,0);
+        string t;
+        if(i==0){
+            t=s.substr(0,50);
+        }
+        if(i==1){
+            t=s.substr(0,15);
+        }
+        if(i==2){
+            t=s.substr(11,15);
+        }
+        if(i==3){
+            t=s.substr(23,15);
+        }
+        if(i==4){
+            t=s.substr(35,15);
+        }
+        double p=0;
+        rep(j,0,t.size()){
+            c[t[j]-'1']++;
+        }
+        rep(j,0,6){
+            p+=c[j]*c[j];
+        }
+        ans[i]=p*6/t.size()-t.size();    
+    }
 
+    
+    rep(i,0,5){
+        cout<<i+1<<" "<<ans[i]<<endl;
+    }
 }

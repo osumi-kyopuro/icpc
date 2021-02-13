@@ -468,7 +468,34 @@ struct all_init
 
 
 int main() {
-    
+    ll n,w,mt=0;
+    cin>>n>>w;
+    V s(n),t(n),p(n);
+    rep(i,0,n){
+        cin>>s[i]>>t[i]>>p[i];
+        mt=max(t[i],mt);
+    }
+    V sum(mt+5);
+    rep(i,0,n){
+        sum[s[i]]+=p[i];
+        sum[t[i]]+=-p[i];
+    }
+    rep(i,1,mt+5){
+        sum[i]+=sum[i-1];
+    }
+    bool flag=true;
+    rep(i,0,mt+5){
+        //cout<<sum[i]<<endl;
+        if(sum[i]>w){
+            flag=false;
+        }
+    }
+    if(flag){
+        cout<<"Yes"<<endl;
+    }
+    else{
+        cout<<"No"<<endl;
+    }
     
 
 }

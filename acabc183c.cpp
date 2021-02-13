@@ -467,8 +467,33 @@ struct all_init
 
 
 
-int main() {
-    
-    
+int main() {        
+    ll n,k,ans=0;
+    cin>>n>>k;
+    vector<V>t(n,V(n));
+    rep(i,0,n){
+        rep(j,0,n){
+            cin>>t[i][j];
+        }
+    }
+
+    V a;
+    rep(i,0,n){
+        a.push_back(i);
+    }
+
+    do{
+        ll sum=0;
+        rep(i,0,n-1){
+            sum+=t[a[i]][a[i+1]];
+        }
+        sum+=t[a[n-1]][0];
+        if(sum==k){
+            ans++;
+        }
+
+    }while(next_permutation(a.begin()+1,a.end()));
+
+    cout<<ans<<endl;
 
 }
