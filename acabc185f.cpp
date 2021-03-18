@@ -529,5 +529,39 @@ struct SegTree {
 
 
 int main() {
-    
+    ll n,q;
+    cin>>n>>q;
+    V a(n);
+    V ans;
+    rep(i,0,n){
+        cin>>a[i];
+    }
+
+    using p = int;
+    auto fx=[](p x1, p x2)-> p {return x1 ^ x2; };
+    p ex=0;
+    SegTree<p> seg(n+3,fx,ex);
+    rep(i,0,n){
+        seg.set(i,a[i]);
+    }
+    seg.build();
+    V c(q),x(q),y(q);
+    rep(i,0,q){
+        cin>>c[i]>>x[i]>>y[i];
+    }
+    rep(i,0,q){
+        if(c[i]==1){
+            x[i]--;
+            int tmp=seg.query(x[i],x[i]+1);
+            seg.update(x[i],tmp ^ y[i]);
+        }
+        else if(c[i]==2){
+            x[i]--;
+            y[i]--;
+            ans.push_back(seg.query(x[i],y[i]+1));
+        }
+    }
+    rep(i,0,ans.size()){
+        cout<<ans[i]<<endl;
+    }   
 }
