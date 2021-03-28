@@ -514,7 +514,29 @@ struct SegTree {
 
 
 int main() {
-    
+    double n;
+    cin>>n;
+    pair<double,double> x0,xn2,ans,t,m;
+    cin>>x0.first>>x0.second;
+    cin>>xn2.first>>xn2.second;
+    //t={(x0.first+xn2.first)/2.0,(x0.second+xn2.second)/2.0};
+    //cout<<t.first<<" "<<t.second<<endl;
+    t={(x0.first+xn2.first)/2.0,(x0.second+xn2.second)/2.0};
+    m={x0.first-t.first,x0.second-t.second};
+    //cout<<t.first<<" "<<t.second<<endl;
+    double rad=(360/n)*PI/180;
+    //cout<<rad<<endl;
+    //cout<<cos(rad)<<endl;
+    //cout<<sin(rad)<<endl;
+    //cout<<x0.first<<" "<<x0.second<<endl;
+    ans.first=(m.first*cos(rad)-m.second*sin(rad)+t.first);
+    ans.second=(m.first*sin(rad)+m.second*cos(rad)+t.second);
+    //ans={(m.first*cos(rad)-m.second*sin(rad)+t.first),
+    //(m.first*sin(rad)+m.second*cos(rad)+t.second)};
+    cout<<ans.first<<" "<<ans.second<<endl;
+
+
+        
 
     
 }

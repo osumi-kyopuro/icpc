@@ -514,7 +514,28 @@ struct SegTree {
 
 
 int main() {
-    
-
-    
+    ll n,q;
+    cin>>n>>q;
+    V a(n,pow(2,31)-1);
+    using p = ll;
+    auto fx=[](p x1, p x2)-> p {return min(x1,x2); };
+    SegTree<p> seg(n+3,fx);
+    rep(i,0,n){
+        seg.set(i,a[i]);
+    }
+    seg.build();
+    V ans;
+    rep(i,0,q){
+        ll com ,x,y;
+        cin>>com>>x>>y;
+        if(com==0){
+            seg.update(x, y);
+        }
+        else{
+            ans.push_back(seg.query(x,y+1));
+        }
+    }
+    rep(i,0,ans.size()){
+        cout<<ans[i]<<endl;
+    }
 }

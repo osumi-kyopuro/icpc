@@ -514,7 +514,30 @@ struct SegTree {
 
 
 int main() {
-    
+    ll n;
+    cin>>n;
+    V a(n);
+    rep(i,0,n){
+        cin>>a[i];
+    }
+    ll ans=LLONG_MAX;
+    rep(bit,0,1<<(n-1)){
+        ll t=0,c=a[0];
+        rep(i,0,n-1){
+            if(bit&(1<<i)){
+                t=t^c;
+                c=a[i+1];
+            }
+            else{
+                c=c|a[i+1];
+            }
+        }
+        t=t^c;
+        //cout<<bit<<":"<<t<<endl;
+        ans=min(ans,t);
+        
+    }
+    cout<<ans<<endl;
 
     
 }
