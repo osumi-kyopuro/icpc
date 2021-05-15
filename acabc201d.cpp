@@ -519,7 +519,79 @@ struct SegTree {
 
 
 int main() {
-    
+    ll h,w;
+    cin>>h>>w;
+    vector<string>a(h);
+    vector<vector<ll>>dp(h,vector<ll>(w));
+    rep(i,0,h){
+        cin>>a[i];
+    }
+    dp[0][0]=0;
+    bool flag=true;
+    rep(i,0,h){
+        rep(j,0,w){
+            if((i+j)%2==0){
+                if(a[i][j]=='-'){
+                    a[i][j]='+';
+                }
+                else{
+                    a[i][j]='-';
+                }
+            }
+
+        }
+    }
+    if(a[h-1][w-1]=='+'){
+        dp[h-1][w-1]=1;
+    }
+    else{
+        dp[h-1][w-1]=-1;
+    }
+
+    rrep(j,w-2,-1){
+        ll i=h-1;
+        dp[i][j]=dp[i][j+1]+(a[i][j]=='-'?-1:1);
+
+    }
+
+    rrep(i,h-2,-1){
+        ll j=w-1;
+        dp[i][j]=dp[i+1][j]+(a[i][j]=='-'?-1:1);
+    }
+
+    rrep(i,h-2,-1){
+        rrep(j,w-2,-1){
+            if((i+j)%2==0){
+                dp[i][j]=max(dp[i+1][j],dp[i][j+1])+(a[i][j]=='-'?-1:1);
+            }
+            else{
+                dp[i][j]=min(dp[i+1][j],dp[i][j+1])+(a[i][j]=='-'?-1:1);
+            }
+        }
+    }
+/*
+    rep(i,0,h){
+        rep(j,0,w){
+            cout<<dp[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+*/
+
+    ll score=dp[0][0]-(a[0][0]=='-'?-1:1);
+    //cout<<score<<endl;
+    if(score>0){
+        cout<<"Takahashi"<<endl;
+    }
+    else if(score==0){
+        cout<<"Draw"<<endl;
+    }
+    else{
+        cout<<"Aoki"<<endl;
+    }
+
+    //cerr<<"osumi"<<endl;
+
 
 }
    

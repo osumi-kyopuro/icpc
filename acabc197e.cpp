@@ -498,7 +498,6 @@ struct SegTree {
         }
     }
     /* debug */
-
     inline X operator[](int a) { return query(a, a + 1); }
     void print() {
         for (int i = 0; i < n; ++i) {
@@ -514,14 +513,39 @@ struct SegTree {
 
 
 
-
-
-
-
 int main() {
-    
+    ll n;
+    cin>>n;
+    ll a,b;
+    map<ll,V>mp;
+    rep(i,0,n){
+        cin>>a>>b;
+        mp[b].push_back(a);
+    }
+    ll L=0,R=0;
+    ll Lcst=0,Rcst=0;
+    for(auto x:mp){
+        ll mi=LLONG_MAX;
+        ll ma=LLONG_MIN;
+        for(auto y:x.second){
+            mi=min(mi,y);
+            ma=max(ma,y);
+        }
+        ll L2=mi,R2=ma;
+        ll Lcst2=LLONG_MAX,Rcst2=LLONG_MAX;
+        Rcst2=min(Rcst2,Rcst+abs(R-L2)+abs(L2-R2));
+        Lcst2=min(Lcst2,Rcst+abs(R-R2)+abs(L2-R2));
 
+        Rcst2=min(Rcst2,Lcst+abs(L-L2)+abs(L2-R2));
+        Lcst2=min(Lcst2,Lcst+abs(L-R2)+abs(L2-R2));
+
+        L=L2,R=R2,Lcst=Lcst2,Rcst=Rcst2;
+
+    }
+
+    ll ans=min(Lcst+abs(L),Rcst+abs(R));
+    cout<<ans<<endl;
+
+
+    
 }
-   
-
-    

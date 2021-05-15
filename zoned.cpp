@@ -513,13 +513,65 @@ struct SegTree {
 
 
 
-
-
-
-
-
 int main() {
-    
+    string s;
+    cin>>s;
+    deque<char>deq;
+    bool flag=false;
+    rep(i,0,s.size()){
+        if(s[i]=='R'){
+            if(flag==true){
+                flag=false;
+            }
+            else{
+                flag=true;
+            }
+        }
+        else{
+            if(flag==true){
+                if(!deq.empty()){
+                    char a=deq.front();
+                    if(a==s[i]){
+                        deq.pop_front();
+                    }
+                    else{
+                        deq.push_front(s[i]);
+                    }
+                }
+                else{
+                    deq.push_front(s[i]);
+                }
+            }
+            else{
+                if(!deq.empty()){
+                    char a=deq.back();
+                    if(a==s[i]){
+                        deq.pop_back();
+                    }
+                    else{
+                        deq.push_back(s[i]);
+                    }
+                }
+                else{
+                    deq.push_back(s[i]);
+                }
+            }
+        }
+    }
+    while(!deq.empty()){
+        if(flag==true){
+            char a=deq.back();
+            cout<<a;
+            deq.pop_back();
+        }
+        else{
+            char a=deq.front();
+            cout<<a;
+            deq.pop_front();
+        }
+    }
+    cout<<endl;
+
 
 }
    

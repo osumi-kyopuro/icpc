@@ -511,7 +511,11 @@ struct SegTree {
 
 
 
-
+ll a,b,x;
+ll check(ll mid){
+    ll d=to_string(mid).size();
+    return a*mid+b*d;
+}
 
 
 
@@ -519,7 +523,18 @@ struct SegTree {
 
 
 int main() {
-    
+    cin>>a>>b>>x;
+    ll left=0,mid,right=1000000000;
+    while(left<right){
+        mid=(left+right+1)/2;
+        if(check(mid)<=x){
+            left=mid;
+        }
+        else{
+            right=mid-1;
+        }
+    }
+    cout<<left<<endl;
 
 }
    
