@@ -519,7 +519,35 @@ struct SegTree {
 
 
 int main() {
-    
+    ll n;
+    cout<<"N回以上連続してタイムアウトした場合にのみ故障とする.N=";
+    cin>>n;
+    map<string,ll>mp;
+    vector<vector<string>>a(10,vector<string>(3));
+    rep(i,0,10){
+        string s;
+        cin>>s;
+        a[i][0]=s.substr(s.find_first_of(',')+1,13);
+
+        rep(j,1,3){
+            s[s.find_first_of(',')]='#';
+            a[i][j]=s.substr(s.find_first_of(',')+1,s.size()-1+s.find_first_of(','));
+        }
+        a[i][1]=a[i][1].substr(0,a[i][1].find(','));
+    }
+
+    rep(i,0,10){
+        if(stoll(a[i][2])>=n && a[i][1]!="-"){
+            mp[a[i][0]]+=stoll(a[i][1]);
+            //cout<<"サーバーアドレス "<<a[i][0]<<", 故障期間 "<<a[i][1]<<", 回数 "<<a[i][2]<<endl;        
+        }
+        else{
+            mp[a[i][0]]+=0;
+        }
+    }
+    for(auto x:mp){
+        cout<<"サブネット"<<x.first<<", 故障期間 "<<x.second<<endl;
+    }
 }
    
 

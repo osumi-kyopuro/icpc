@@ -519,7 +519,17 @@ struct SegTree {
 
 
 int main() {
-    
+    vector<pair<string,string>>a;
+    rep(i,0,10){
+        string s;
+        cin>>s;
+        a.push_back({s.substr(s.find(',')+1,13),s.substr(s.find_last_of(',')+1,s.size()-1+s.find_last_of(','))});
+    }
+
+    rep(i,0,10){
+        cout<<"サーバーアドレス "<<a[i].first<<", 故障期間 "<<a[i].second<<endl;
+    }
+
 }
    
 

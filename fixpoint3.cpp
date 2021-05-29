@@ -519,7 +519,45 @@ struct SegTree {
 
 
 int main() {
-    
+    ll n,m,t;
+    cout<<"N回以上連続してタイムアウトした場合にのみ故障とする.N=";
+    cin>>n;
+    cout<<"直近m回の平均応答時間がtミリ秒を超えた時"<<endl;
+    cout<<"m=";
+    cin>>m;
+    cout<<"t=";
+    cin>>t;
+    vector<double>b(10);
+    vector<vector<string>>a(10,vector<string>(3+m));
+    rep(i,0,10){
+        string s;
+        cin>>s;
+        a[i][0]=s.substr(s.find_first_of(',')+1,13);
+
+        rep(j,1,3+m){
+            s[s.find_first_of(',')]='#';
+            a[i][j]=s.substr(s.find_first_of(',')+1,s.size()-1+s.find_first_of(','));
+            if(j!=3+m-1){
+                a[i][j]=a[i][j].substr(0,a[i][j].find(','));
+            }
+            if(j>=3&&j<3+m){
+                b[i]+=(double)(stoll(a[i][j]));
+            }
+        }
+        b[i]=b[i]/(double)(m);
+
+        //a[i][1]=a[i][1].substr(0,a[i][1].find(','));
+        //a[i][2]=a[i][2].substr(0,a[i][2].find(','));
+        //a[i][3]=a[i][3].substr(0,a[i][3].find(','));
+    }
+
+    rep(i,0,10){
+        if(b[i]>t){
+            cout<<"サーバーアドレス "<<a[i][0]<<", 過負荷状態期間 "<<a[i][1]<<endl;
+        //cout<<"サーバーアドレス "<<a[i][0]<<", 故障期間 "<<a[i][1]<<", 回数 "<<a[i][2]<<
+        //" "<<a[i][3]<<" "<<a[i][4]<<" "<<b[i]<<endl;
+        }
+    }
 }
    
 
