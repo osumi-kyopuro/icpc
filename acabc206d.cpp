@@ -538,30 +538,22 @@ struct Zip{
 
 
 int main() {
-    ll n,k;
-    cin>>n>>k;
-    vector<P>a(n);
+    ll n,t=0;
+    cin>>n;
+    vector<ll>a(n);
     rep(i,0,n){
-        ll t;
-        cin>>t;
-        a[i]={t,i};
+        cin>>a[i];
     }
-    sort(all(a));
+    Zip z(a);
     rep(i,0,n){
-        if(k%n>=(i+1)){
-            a[i].first=k/n+1;
-        }
-        else{
-            a[i].first=k/n;
-        }
+        a[i]=z.zip(a[i]);
     }
-    rep(i,0,n){
-        swap(a[i].first,a[i].second);
+    UnionFind uf(z.size());
+    rep(i,0,a.size()){
+        uf.merge(a[i],a[n-i-1]);
     }
-    sort(all(a));
-    rep(i,0,n){
-        cout<<a[i].second<<endl;
-    }
+    ll ans=z.size()-uf.forest;
+    cout<<ans<<endl;
 }
    
 
