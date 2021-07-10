@@ -538,30 +538,7 @@ struct Zip{
 
 
 int main() {
-    ll n,k;
-    cin>>n>>k;
-    vector<P>a(n);
-    rep(i,0,n){
-        ll t;
-        cin>>t;
-        a[i]={t,i};
-    }
-    sort(all(a));
-    rep(i,0,n){
-        if(k%n>=(i+1)){
-            a[i].first=k/n+1;
-        }
-        else{
-            a[i].first=k/n;
-        }
-    }
-    rep(i,0,n){
-        swap(a[i].first,a[i].second);
-    }
-    sort(all(a));
-    rep(i,0,n){
-        cout<<a[i].second<<endl;
-    }
+    
 }
    
 
