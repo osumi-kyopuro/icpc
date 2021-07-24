@@ -634,7 +634,40 @@ struct Clock{
 
 
 int main() {
-    
+    ll n,k,count=0,ans=0;
+    cin>>n>>k;
+    V c(n);
+    set<ll>s;
+    map<ll,ll>mp;
+    rep(i,0,n){
+        cin>>c[i];
+    }
+    rep(i,0,k){
+        mp[c[i]]++;
+        s.insert(c[i]);
+    }
+    count=s.size();
+    ans=count;
+    rep(i,1,n-(k-1)){
+        
+        mp[c[i-1]]--;
+        if(mp[c[i-1]]==0){
+            mp.erase(c[i-1]);
+        }
+        if(mp.find(c[i-1])==mp.end()){
+            count--;
+        }
+        if(mp.find(c[i+k-1])==mp.end()){
+            count++;
+        }
+        mp[c[i+k-1]]++;
+        //cout<<count<<endl;
+        ans=max(ans,count);
+        //cout<<ans<<endl;
+    }
+    cout<<ans<<endl;
+
+
 }
    
 
