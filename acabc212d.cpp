@@ -634,7 +634,31 @@ struct Clock{
 
 
 int main() {
-    
+    //小さい順に取り出される優先度付きキュー
+    priority_queue<ll,V,greater<ll>>pq;
+    ll q;
+    cin>>q;
+    ll sum=0;
+    rep(i,0,q){
+        ll p;
+        cin>>p;
+        if(p==1){
+            ll p2;
+            cin>>p2;
+            pq.push(p2-sum);
+        }
+        else if(p==2){
+            ll p2;
+            cin>>p2;
+            sum+=p2;
+        }
+        else if(p==3){
+            ll t=pq.top();
+            cout<<t+sum<<endl;
+            pq.pop();
+        }
+    }
+
 
 
 }
