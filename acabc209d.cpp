@@ -647,7 +647,45 @@ struct Clock{
 
 
 int main() {
-    
+    ll n,q;
+    cin>>n>>q;
+    graph g(n);
+    for(ll i=0;i<n-1;i++){
+        ll a,b;
+        cin>>a>>b;
+        g[--a].push_back(--b);//無向辺
+        g[b].push_back(a);//有向辺
+    }
+    ll s=0,t=n-1;
+    // 頂点 s をスタートとした探索
+    vector<ll>dist(n,-1);
+    queue<ll>que;
+    dist[s]=0,que.push(s);
+    while(!que.empty()){
+        ll v=que.front();
+        que.pop();
+        for(auto nv:g[v]){
+            if(dist[nv]==-1){
+                dist[nv]=dist[v]+1;
+                que.push(nv);
+            }
+        }
+    }
+    vector<string>ans(q);
+    dist[0]=0;
+    rep(i,0,q){
+        ll c,d;
+        cin>>c>>d;
+        if((dist[c-1]+dist[d-1])%2==0){
+            ans[i]="Town";
+        }
+        else{
+            ans[i]="Road";
+        }
+    }
+    rep(i,0,q){
+        cout<<ans[i]<<endl;
+    }
 }
    
 

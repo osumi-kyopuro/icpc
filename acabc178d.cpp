@@ -647,7 +647,16 @@ struct Clock{
 
 
 int main() {
+    ll s;
+    cin>>s;
+    V a(2002);
+    a[0]=1,a[1]=a[2]=0;
+    rep(i,3,s+1){
+        a[i]=(a[i-1]+a[i-3])%mod;
+    }
+    cout<<a[s]<<endl;
     
+
 }
    
 

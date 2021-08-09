@@ -647,7 +647,31 @@ struct Clock{
 
 
 int main() {
-    
+    ll a,b,k;
+    cin>>a>>b>>k;
+    k--;
+
+    ll n = a+b;
+
+    string ans = "";
+    rep(i, 0, n) {
+        if (0 < a) {
+            if (k < aCb(a+b-1,b)) {
+                ans += "a";
+                a-=1;
+            }
+            else {
+                ans += "b";
+                k -= aCb(a+b-1,b);
+                b-=1;
+            }
+        }
+        else {
+            ans += "b";
+            b-=1;
+        }
+    }
+    cout << ans << endl;
 }
    
 

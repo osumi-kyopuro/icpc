@@ -646,8 +646,41 @@ struct Clock{
 };
 
 
+void func(graph& g,V& dist,ll node){
+    cout<<node+1<<" ";
+    for(auto child:g[node]){
+        if(dist[child]!=-1){
+
+        }
+        else{
+            dist[child]=0;
+            func(g,dist,child);
+            cout<<node+1<<" ";
+        }
+    }
+}
+
+
 int main() {
+    ll n;
+    cin>>n;
+    graph g(n);
+    rep(i,0,n-1){
+        ll a,b;
+        cin>>a>>b;
+        g[--a].push_back(--b);//無向辺
+        g[b].push_back(a);//有向辺
+    }
+    ll s=0;
+    rep(i,0,n){
+        sort(all(g[i]));
+    }
     
+    // 頂点 s をスタートとした探索
+    vector<ll>dist(n,-1);
+    dist[0]=0;
+    func(g,dist,0);
+    cout<<endl;
 }
    
 

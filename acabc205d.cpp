@@ -121,19 +121,6 @@ ll modinv(ll a, ll m)
     return u;
 }
 
-//限界n<=1010,k<1010,modなし
-#define CMAX 1010
-int noinit = 1; ll memo[CMAX][CMAX];
-ll aCb(ll a, ll b) {
-    if (noinit) {
-        rep(i, 0, CMAX) rep(j, 0, CMAX) memo[i][j] = -1;
-        noinit = 0;
-    }
-    if (b == 0 || a == b) return 1;
-    if (0 <= memo[a][b]) return memo[a][b];
-    return memo[a][b] = aCb(a - 1, b - 1) + aCb(a - 1, b);
-}
-
 // 二項係数計算nCk,n<=10^7,k<=10^7まで
 ll com(ll n, ll k)
 {
@@ -647,7 +634,50 @@ struct Clock{
 
 
 int main() {
-    
+    ll n,q;
+    cin>>n>>q;
+    V a(n),ans(q);
+    ll t=0;
+    V sa(n+1,0);
+    V sumsa(n+2,0);
+    rep(i,0,n){
+        cin>>a[i];
+    }
+    sa[0]=a[0]-1;
+    sumsa[0]=0;
+    sumsa[1]=sa[0];
+    t+=sa[0];
+    rep(i,1,n){
+        t+=a[i]-a[i-1]-1;
+        sumsa[i+1]=t;
+    }
+    t+=1000000000000000000+n-a[n-1];
+    sumsa[n+1]=t;
+    /*rep(i,0,q){
+        ll x;
+        cin>>x;
+    }*/
+    /*rep(i,0,n+2){
+        cout<<i<<" "<<sumsa[i]<<endl;
+    }*/
+    rep(i,0,q){
+        ll x;
+        cin>>x;
+        ll p=lower_bound(all(sumsa),x)-sumsa.begin();
+        if(p-1>0){
+            //cout<<i<<" "<<p<<" "<<a[p-2]<<endl;
+            ans[i]=a[p-2]+(x-sumsa[p-1]);
+        }
+        else{
+            ans[i]=x;
+        }
+    }
+    rep(i,0,q){
+        cout<<ans[i]<<endl;
+    }
+
+
+
 }
    
 

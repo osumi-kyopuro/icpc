@@ -647,7 +647,41 @@ struct Clock{
 
 
 int main() {
+    ll n,n2;
+    cin>>n;
+    ll t=0;
+    ll ans=n;
+    rep(i,1,n+1){
+        bool flag=false;
+        n2=i;
+        string s=to_string(i);
+        rep(i,0,s.size()){
+            if(s[i]=='7'){
+                flag=true;
+            }
+        }
+        while(n2>0){
+            //string s;
+            if(n2%8==7||n2/8==7){
+                //s=n2%8-"0"+s;
+                //s=n2/8-"0"+s;
+                flag=true;
+                break;
+            }
+            else if(!flag){
+                flag=false;
+            }
+            n2=n2/8;
+        }
+        if(flag){
+            t++;
+            //cout<<i<<endl;
+        }
+    }
+    ans-=t;
+    cout<<ans<<endl;
     
+
 }
    
 

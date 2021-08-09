@@ -647,7 +647,18 @@ struct Clock{
 
 
 int main() {
-    
+    ll n;
+    cin>>n;
+    //cout<<ism(5,29)<<endl;
+    for(ll i=1,a=3;a<=n;a*=3,i++){
+        for(ll j=1,b=5;b<=n;b*=5,j++){
+            if(a+b==n){
+                cout<<i<<" "<<j<<endl;
+                exit(0);
+            }
+        }
+    }
+    cout<<-1<<endl;
 }
    
 

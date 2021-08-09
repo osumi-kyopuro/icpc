@@ -647,7 +647,21 @@ struct Clock{
 
 
 int main() {
-    
+    ll n,ans=LLONG_MAX;
+    cin>>n;
+    V c(n);
+    rep(i,0,n){
+        ll a;
+        cin>>a;
+        c.push_back(a);
+    }
+    sort(all(c));
+    ans=c[0];
+    rep(i,0,c.size()){
+        ans=gcd(ans,c[i]);        
+    }
+    cout<<ans<<endl;
+
 }
    
 

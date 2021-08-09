@@ -647,7 +647,18 @@ struct Clock{
 
 
 int main() {
-    
+    ll n;
+    cin>>n;
+    string s,t;
+    cin>>s;
+    rep(i,0,s.size()){
+        t+=s[i];
+        if(t.size()>=3&&t.substr(t.size()-3,3)=="fox"){
+            t.erase(t.size()-3,3);
+        }
+    }
+    cout<<t.size()<<endl;
+
 }
    
 

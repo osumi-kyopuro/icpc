@@ -647,7 +647,61 @@ struct Clock{
 
 
 int main() {
+    ll n;
+    cin>>n;
+    graph g(n);
+    rep(i,0,n-1){
+        ll a,b;
+        cin>>a>>b;
+        g[--a].push_back(--b);//無向辺
+        g[b].push_back(a);//有向辺
+    }
+    ll s=0;
+    rep(i,0,n){
+        sort(all(g[i]));
+    }
     
+    // 頂点 s をスタートとした探索
+    vector<ll>dist(n,-1);
+    vector<ll>cnt(n,0);
+    stack<ll>st1;
+    V ans;
+    stack<ll>st;
+    dist[s]=0,st1.push(s);
+    while(!st1.empty()){
+        ll v=st1.top();
+        st1.pop();
+        //cout<<v<<endl;
+        ans.push_back(v+1);
+        if(g[v].size()>cnt[v]){
+            ll nextv=g[v][cnt[v]];
+            if(dist[nextv]!=-1){
+                cnt[v]++;
+            }
+        }
+        if(g[v].size()>cnt[v]){
+            ll nextv=g[v][cnt[v]];
+            cnt[v]++;    
+            dist[nextv]=dist[v]+1;
+            st1.push(nextv);
+            st.push(v);
+        }
+        else{
+            if(st.size()==0){
+                break;
+            }
+            st1.push(st.top());
+            st.pop();
+        }
+    }
+    rep(i,0,n){
+        //cout<<i+1<<" "<<dist[i]<<endl;
+    }
+    rep(i,0,ans.size()){
+        cout<<ans[i]<<" ";
+    }
+    cout<<endl;
+
 }
    
 

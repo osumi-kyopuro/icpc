@@ -647,7 +647,17 @@ struct Clock{
 
 
 int main() {
-    
+    ll x,y,a,b;
+    cin>>x>>y>>a>>b;
+    ll cnt=0;
+    //2e*18を超える場合でもdoubleでキャストすれば問題なし
+    while((double)a*x<=2e18 && a*x<=x+b && a*x<y){
+		x*=a;
+		cnt++;
+        //cout<<(double)a*x<<endl;
+	}
+    cout<<cnt+(y-x-1)/b<<endl;
+
 }
    
 
