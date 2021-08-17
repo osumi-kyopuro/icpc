@@ -668,6 +668,16 @@ string long_to_base9(long long N) {
 
 
 int main() {
+    ll a,b;
+    cin>>a>>b;
+    ll m=1000000000000000000;
+    ll c=a/gcd(a,b);
+    if(b<=m/c){
+        cout<<c*b<<endl;
+    }
+    else{
+        cout<<"Large"<<endl;
+    }
     
 }
    

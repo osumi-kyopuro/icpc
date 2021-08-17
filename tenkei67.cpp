@@ -175,7 +175,6 @@ ll gcd(ll a, ll b)
 /*最小公倍数*/
 ll lcm(ll a, ll b)
 {
-    
     return a / gcd(a, b) * b;
 }
 
@@ -668,7 +667,18 @@ string long_to_base9(long long N) {
 
 
 int main() {
-    
+    string N; int K;
+	cin >> N >> K;
+	for (int i = 0; i < K; ++i) {
+		N = long_to_base9(base8_to_long(N));
+		for (int j = 0; j < N.size(); ++j) {
+			if (N[j] == '8') {
+				N[j] = '5';
+			}
+		}
+	}
+	cout << N << endl;
+	return 0;
 }
    
 

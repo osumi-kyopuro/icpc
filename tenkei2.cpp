@@ -175,7 +175,6 @@ ll gcd(ll a, ll b)
 /*最小公倍数*/
 ll lcm(ll a, ll b)
 {
-    
     return a / gcd(a, b) * b;
 }
 
@@ -668,7 +667,31 @@ string long_to_base9(long long N) {
 
 
 int main() {
-    
+    ll n;
+    cin>>n;
+    if(n%2==1){
+        exit(0);
+    }
+    string s=string(n/2,'(')+string(n/2,')');
+    do{
+        ll x=0,y=0;
+        bool flag=true;
+        rep(i,0,s.size()){
+            if(s[i]=='('){
+                x++;
+            }
+            else{
+                y++;
+            }
+            if(x<y){
+                flag=false;
+            }
+        }
+        if(flag){
+            cout<<s<<endl;
+        }
+
+    }while(next_permutation(s.begin(),s.end()));
 }
    
 

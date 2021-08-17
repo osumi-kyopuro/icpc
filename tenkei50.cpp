@@ -668,7 +668,19 @@ string long_to_base9(long long N) {
 
 
 int main() {
-    
+    ll n,l;
+    cin>>n>>l;
+    V dp(n+1);
+    dp[0]=1;
+    rep(i,1,n+1){
+        if(i>=l){
+            dp[i]=(dp[i-1]+dp[i-l])%mod;
+        }
+        else{
+            dp[i]=dp[i-1];
+        }
+    }
+    cout<<dp[n]<<endl;
 }
    
 

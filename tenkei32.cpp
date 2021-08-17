@@ -175,7 +175,6 @@ ll gcd(ll a, ll b)
 /*最小公倍数*/
 ll lcm(ll a, ll b)
 {
-    
     return a / gcd(a, b) * b;
 }
 
@@ -668,7 +667,50 @@ string long_to_base9(long long N) {
 
 
 int main() {
-    
+    ll n;
+    cin>>n;
+    vector<V>a(n,V(n));
+    rep(i,0,n){
+        rep(j,0,n){
+            cin>>a[j][i];
+        }
+    }
+    ll m;
+    cin>>m;
+    set<P>s;
+    V p;
+    ll ans=LLONG_MAX;
+    rep(i,0,m){
+        ll x,y;
+        cin>>x>>y;
+        s.insert({--x,--y});
+        s.insert({y,x});
+    }
+    rep(i,0,n){
+        p.push_back(i);
+    }
+    do{
+        bool flag=true;
+        ll t=0;
+        rep(i,0,n-1){
+            if(s.find({p[i],p[i+1]})!=s.end()){
+                flag=false;
+            }
+        }
+        if(flag){
+            rep(i,0,n){
+                t+=a[i][p[i]];
+            }
+            ans=min(ans,t);
+        }
+    }while(next_permutation(all(p)));
+    if(ans==LLONG_MAX){
+        cout<<-1<<endl;
+    }
+    else{
+        cout<<ans<<endl;
+    }
+
 }
    
 

@@ -668,7 +668,25 @@ string long_to_base9(long long N) {
 
 
 int main() {
-    
+    ll n;
+    cin>>n;
+    UnionFind uf(n);
+    vector<tuple<ll,ll,ll>>a;
+    rep(i,0,n-1){
+        ll x,y,z;
+        cin>>x>>y>>z;
+        --x,--y;
+        a.emplace_back(z,x,y);
+    }
+    sort(all(a));
+    ll ans=0;
+    rep(i,0,n-1){
+        ans+=uf.size(get<1>(a[i]))*uf.size(get<2>(a[i]))*get<0>(a[i]);
+        uf.merge(get<1>(a[i]),get<2>(a[i]));
+    }
+    cout<<ans<<endl;
+
+
 }
    
 

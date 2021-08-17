@@ -668,7 +668,23 @@ string long_to_base9(long long N) {
 
 
 int main() {
-    
+    ll n,k;
+    cin>>n>>k;
+    if(k==1){
+        cout<<(n==1?1:0)<<endl;
+    }
+    else if(n==1){
+        cout<<k%mod<<endl;
+    }
+    else if(n==2){
+        cout<<(ll)(k)*(k-1)%mod<<endl;
+    }
+    else{
+        ll ans=(k)*(k-1)%mod;
+        ll p=ismm(k-2,n-2,mod);
+        ans=(ans*p)%mod;
+        cout<<ans<<endl;
+    }
 }
    
 

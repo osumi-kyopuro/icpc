@@ -175,7 +175,6 @@ ll gcd(ll a, ll b)
 /*最小公倍数*/
 ll lcm(ll a, ll b)
 {
-    
     return a / gcd(a, b) * b;
 }
 
@@ -647,28 +646,23 @@ struct Clock{
 };
 
 
-long long base8_to_long(string N) {
-	long long res = 0;
-	for (int i = 0; i < N.size(); ++i) {
-		res = res * 8 + int(N[i] - '0');
-	}
-	return res;
-}
-string long_to_base9(long long N) {
-	if (N == 0) {
-		return "0";
-	}
-	string res;
-	while (N > 0) {
-		res = char(N % 9 + '0') + res;
-		N /= 9;
-	}
-	return res;
-}
-
-
 int main() {
+    ll n;
+    cin>>n;
+    V a(n),b(n),c(n),d(n);
+    rep(i,0,n){
+        cin>>a[i]>>b[i];
+        c[i]=a[i]+b[i];
+        d[i]=a[i]-b[i];
+    }
+    //マンハッタン距離 45度回転
     
+    sort(all(c));
+    sort(all(d));
+    ll p=max(c[n-1]-c[0],d[n-1]-d[0]);
+    ll q=max(-d[0]+d[n-1],-c[n-1]+c[0]);
+    cout<<max(p,q)<<endl;
+
 }
    
 

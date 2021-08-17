@@ -668,6 +668,41 @@ string long_to_base9(long long N) {
 
 
 int main() {
+    ll n,q;
+    cin>>n>>q;
+    V a(n);
+    rep(i,0,n){
+        cin>>a[i];
+    }
+    ll t=0;
+    V ans;
+    rep(i,0,q){
+        ll d,x,y;
+        cin>>d>>x>>y;
+        --x,--y;
+        ll e1=x-t;
+        ll e2=y-t;
+        while(e1<0){
+            e1+=n;
+        }
+        while(e2<0){
+            e2+=n;
+        }
+        if(d==1){
+            ll c=a[e1%n];
+            a[e1%n]=a[e2%n];
+            a[e2%n]=c;
+        }
+        else if(d==2){
+            t++;
+        }
+        else{
+            ans.push_back(a[e1%n]);
+        }
+    }
+    rep(i,0,ans.size()){
+        cout<<ans[i]<<endl;
+    }
     
 }
    

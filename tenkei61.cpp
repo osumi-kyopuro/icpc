@@ -175,7 +175,6 @@ ll gcd(ll a, ll b)
 /*最小公倍数*/
 ll lcm(ll a, ll b)
 {
-    
     return a / gcd(a, b) * b;
 }
 
@@ -647,28 +646,27 @@ struct Clock{
 };
 
 
-long long base8_to_long(string N) {
-	long long res = 0;
-	for (int i = 0; i < N.size(); ++i) {
-		res = res * 8 + int(N[i] - '0');
-	}
-	return res;
-}
-string long_to_base9(long long N) {
-	if (N == 0) {
-		return "0";
-	}
-	string res;
-	while (N > 0) {
-		res = char(N % 9 + '0') + res;
-		N /= 9;
-	}
-	return res;
-}
-
-
 int main() {
-    
+    ll q;
+    cin>>q;
+    V t(1<<20),x(1<<20),a(1<<20);
+    ll cl=500000,cr=500000;
+    rep(i,0,q){
+        cin>>t[i]>>x[i];
+    }
+    rep(i,0,q){
+        if (t[i] == 1) {
+			cl--;
+			a[cl] = x[i];
+		}
+		if (t[i] == 2) {
+			a[cr] = x[i];
+			cr++;
+		}
+		if (t[i] == 3) {
+			cout << a[cl + x[i] - 1] << endl;
+		}
+    }
 }
    
 

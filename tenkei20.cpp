@@ -175,7 +175,6 @@ ll gcd(ll a, ll b)
 /*最小公倍数*/
 ll lcm(ll a, ll b)
 {
-    
     return a / gcd(a, b) * b;
 }
 
@@ -668,7 +667,18 @@ string long_to_base9(long long N) {
 
 
 int main() {
-    
+    ll a,b,c;
+    cin>>a>>b>>c;
+    ll d=1;
+    rep(i,0,b){
+        d*=c;
+    }
+    if(d>a){
+        cout<<"Yes"<<endl;
+    }
+    else{
+        cout<<"No"<<endl;
+    }
 }
    
 

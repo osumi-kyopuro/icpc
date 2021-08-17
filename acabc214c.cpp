@@ -668,7 +668,28 @@ string long_to_base9(long long N) {
 
 
 int main() {
-    
+    ll n;
+    cin>>n;
+    V s(n),t(n),ans(n);
+    rep(i,0,n){
+        cin>>s[i];
+    }
+    ll z=LLONG_MAX,p=0;
+    rep(i,0,n){
+        cin>>t[i];
+        if(z>t[i]){
+            z=t[i];
+            p=i;
+        }
+    }
+    ans[p]=t[p];
+    rep(i,0,n-1){
+        ans[(p+i+1)%n]=min({ans[(p+i)%n]+s[(p+i)%n],t[(p+i+1)%n]});
+    }
+    rep(i,0,n){
+        cout<<ans[i]<<endl;
+    }
+
 }
    
 
