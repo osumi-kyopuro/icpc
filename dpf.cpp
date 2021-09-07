@@ -628,15 +628,52 @@ struct Clock{
         }    	
     	
     }
+  
+  
 };
 
 
-
-
 int main() {
-    
+    string s,t,a;
+    cin>>s>>t;
+    vector<V>dp(s.size()+1,V(t.size()+1));
+    rep(i,1,s.size()+1){
+        rep(j,1,t.size()+1){
+            if(s[i-1]==t[j-1]){
+                dp[i][j]=dp[i-1][j-1]+1;
+            }
+            else{
+                dp[i][j]=max(dp[i-1][j],dp[i][j-1]);
+            }
+        }
+    }
+    /*
+    rep(i,0,s.size()+1){
+        rep(j,0,t.size()+1){
+            cout<<dp[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+    */
+    ll i=s.size(),j=t.size();
+    string ans;
+    while(i>=1&&j>=1){
+        if(dp[i][j]==dp[i-1][j]){
+            i--;
+        }
+        else if(dp[i][j]==dp[i][j-1]){
+            j--;
+        }
+        else{
+            ans+=s[i-1];
+            i--,j--;
+        }
+    }
+    reverse(all(ans));
+    cout<<ans<<endl;
 
-
+   
 }
    
 
+    

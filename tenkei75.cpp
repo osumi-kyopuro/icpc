@@ -57,7 +57,7 @@ struct edge{
 using Graph=vector<vector<edge>>;//重み付きグラフ
 
 //ダイクストラ法
-vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph) {
+vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph,vector<V>T,vector<V>K) {
 	//i:始点
 	//Graph:重み付きグラフ
 	ll n =Graph.size();
@@ -121,6 +121,19 @@ ll modinv(ll a, ll m)
     return u;
 }
 
+//限界n<=1010,k<1010,modなし
+#define CMAX 1010
+int noinit = 1; ll memo[CMAX][CMAX];
+ll aCb(ll a, ll b) {
+    if (noinit) {
+        rep(i, 0, CMAX) rep(j, 0, CMAX) memo[i][j] = -1;
+        noinit = 0;
+    }
+    if (b == 0 || a == b) return 1;
+    if (0 <= memo[a][b]) return memo[a][b];
+    return memo[a][b] = aCb(a - 1, b - 1) + aCb(a - 1, b);
+}
+
 // 二項係数計算nCk,n<=10^7,k<=10^7まで
 ll com(ll n, ll k)
 {
@@ -162,6 +175,7 @@ ll gcd(ll a, ll b)
 /*最小公倍数*/
 ll lcm(ll a, ll b)
 {
+    
     return a / gcd(a, b) * b;
 }
 
@@ -628,15 +642,50 @@ struct Clock{
         }    	
     	
     }
+  
+  
 };
 
 
+long long base8_to_long(string N) {
+	long long res = 0;
+	for (int i = 0; i < N.size(); ++i) {
+		res = res * 8 + int(N[i] - '0');
+	}
+	return res;
+}
+string long_to_base9(long long N) {
+	if (N == 0) {
+		return "0";
+	}
+	string res;
+	while (N > 0) {
+		res = char(N % 9 + '0') + res;
+		N /= 9;
+	}
+	return res;
+}
 
 
 int main() {
-    
-
-
+    ll N,cnt=0;
+    cin >> N;
+    const auto &res = prime_factorize(N);
+    //cout << N << ":";
+    for (auto p : res) {
+        for (int i = 0; i < p.second; ++i){
+            //cout << " " << p.first;
+            cnt++;    
+        } 
+    }
+    //cout << endl;
+    if((ll)(log2(cnt))==log2(cnt)){
+        cout<<(ll)(log2(cnt))<<endl;
+    }
+    else{
+        cout<<(ll)(log2(cnt)+1)<<endl;
+    }
 }
    
 
+    

@@ -630,13 +630,51 @@ struct Clock{
     }
 };
 
-
-
-
 int main() {
-    
+    ll a,b,c;
+    ll ans=1;
+    cin>>a>>b>>c;
+    ll p=998244353;
+    ans=(ans*modinv(2,p))%p;
+    if(ans<0){
+        ans+=p;
+    }
+    ans=((ans*a)%p);
+    if(ans<0){
+        ans+=p;
+    }
+    ans=((ans*(a+1))%p);
+    if(ans<0){
+        ans+=p;
+    }
 
+    ans=(ans*modinv(2,p))%p;
+    if(ans<0){
+        ans+=p;
+    }
+    ans=((ans*b)%p);
+    if(ans<0){
+        ans+=p;
+    }
+    ans=((ans*(b+1))%p);
+    if(ans<0){
+        ans+=p;
+    }
 
+    ans=(ans*modinv(2,p))%p;
+    if(ans<0){
+        ans+=p;
+    }
+    ans=((ans*c)%p);
+    if(ans<0){
+        ans+=p;
+    }
+    ans=((ans*(c+1))%p);
+    if(ans<0){
+        ans+=p;
+    }
+    cout<<ans<<endl;
 }
    
 
+    

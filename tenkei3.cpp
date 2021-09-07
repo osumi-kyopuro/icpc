@@ -630,13 +630,64 @@ struct Clock{
     }
 };
 
-
-
-
 int main() {
-    
-
+    ll n;
+    cin>>n;
+    graph g(n);
+    rep(i,0,n-1){
+        ll x,y;
+        cin>>x>>y;
+        --x,--y;
+        g[x].push_back(y);
+        g[y].push_back(x);
+    }
+    ll s=0;
+    // 頂点0からの距離を求める
+    vector<ll>dist(n,-1);
+    queue<ll>que;
+    dist[s]=0,que.push(s);
+    while(!que.empty()){
+        ll v=que.front();
+        que.pop();
+        for(auto nv:g[v]){
+            if(dist[nv]==-1){
+                dist[nv]=dist[v]+1;
+                que.push(nv);
+            }
+        }
+    }
+    //頂点0からの距離が遠い物を始点とする
+    ll maxi=-1,maxd=-1;
+    rep(i,0,n){
+        if(maxd<dist[i]){
+            maxi=i;
+            maxd=dist[i];
+        }
+    }
+    rep(i,0,n){
+        dist[i]=-1;
+    }
+    s=maxi;
+    que.push(s);
+    dist[s]=0;
+     while(!que.empty()){
+        ll v=que.front();
+        que.pop();
+        for(auto nv:g[v]){
+            if(dist[nv]==-1){
+                dist[nv]=dist[v]+1;
+                que.push(nv);
+            }
+        }
+    }
+    //木の直径を求める
+    ll ans=0;
+    rep(i,0,n){
+        ans=max(ans,dist[i]);
+    }
+    cout<<ans+1<<endl;
 
 }
    
 
+    

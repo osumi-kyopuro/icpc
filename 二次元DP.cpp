@@ -634,9 +634,42 @@ struct Clock{
 
 
 int main() {
-    
-
-
+    ll n,m,k;
+    cin>>n>>m>>k;
+    V a(n);
+    rep(i,0,n){
+        cin>>a[i];
+    }
+    //bool dp[i][j]:=j番目の要素まで使って総和をiにできるか
+     vector<vector<vector<bool>>> dp(m+1, vector<vector<bool>>(k+1, vector<bool>(n)));
+    //vector<vector<B>>dp(m+1,vector<vector>(n));
+    dp[0][0][0]=true;
+    dp[a[0]][1][0]=true;
+    rep(j,1,n){
+        rep(l,0,k+1){
+            rep(i,0,m+1){
+                if(i-a[j]>=0&&l>=1){
+                    dp[i][l][j]=dp[i][l][j-1]||dp[i-a[j]][l-1][j-1];    
+                }
+                else{
+                    dp[i][l][j]=dp[i][l][j-1];
+                }
+            }    
+        }
+    }
+    bool flag=false;
+    rep(l,0,k+1){
+        if(dp[m][l][n-1]){
+            flag=true;
+            break;
+        }
+    }
+    if(flag){
+        cout<<"Yes"<<endl;
+    }
+    else{
+        cout<<"No"<<endl;
+    }
 }
    
 

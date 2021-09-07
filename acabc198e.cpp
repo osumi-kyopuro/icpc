@@ -633,10 +633,47 @@ struct Clock{
 
 
 
+ll n;
+V a(101010);
+graph g;
+V cnt(101010);
+B good(101010,false);
+void dfs(ll cu,ll pa){
+    if(cnt[a[cu]]==0){
+        good[cu]=true;
+    }
+    cnt[a[cu]]++;
+    for(auto to:g[cu]){
+        if(to!=pa){
+            dfs(to,cu);
+        }
+    }
+    cnt[a[cu]]--;
+}
+
 int main() {
-    
+    cin>>n;
+    g.resize(n);
+    rep(i,0,n){
+        cin>>a[i];
+    }
+    rep(i,0,n-1){
+        ll x,y;
+        cin>>x>>y;
+        g[--x].push_back(--y);
+        g[y].push_back(x);
+    }    
+    dfs(0,-1);
+    rep(i,0,n){
+        if(good[i]){
+            cout<<i+1<<endl;
+        }
+    }
+
+
 
 
 }
    
 
+    

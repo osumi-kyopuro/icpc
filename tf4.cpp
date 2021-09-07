@@ -499,6 +499,7 @@ int main() {
                 }
             }
             else{
+                //dp[i][j]=0;
                 if(i!=0){
                     dp[j][i]=dp[j][i-1]%mod;
                 }

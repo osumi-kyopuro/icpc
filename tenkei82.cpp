@@ -57,7 +57,7 @@ struct edge{
 using Graph=vector<vector<edge>>;//重み付きグラフ
 
 //ダイクストラ法
-vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph) {
+vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph,vector<V>T,vector<V>K) {
 	//i:始点
 	//Graph:重み付きグラフ
 	ll n =Graph.size();
@@ -121,6 +121,19 @@ ll modinv(ll a, ll m)
     return u;
 }
 
+//限界n<=1010,k<1010,modなし
+#define CMAX 1010
+int noinit = 1; ll memo[CMAX][CMAX];
+ll aCb(ll a, ll b) {
+    if (noinit) {
+        rep(i, 0, CMAX) rep(j, 0, CMAX) memo[i][j] = -1;
+        noinit = 0;
+    }
+    if (b == 0 || a == b) return 1;
+    if (0 <= memo[a][b]) return memo[a][b];
+    return memo[a][b] = aCb(a - 1, b - 1) + aCb(a - 1, b);
+}
+
 // 二項係数計算nCk,n<=10^7,k<=10^7まで
 ll com(ll n, ll k)
 {
@@ -162,6 +175,7 @@ ll gcd(ll a, ll b)
 /*最小公倍数*/
 ll lcm(ll a, ll b)
 {
+    
     return a / gcd(a, b) * b;
 }
 
@@ -628,15 +642,103 @@ struct Clock{
         }    	
     	
     }
+  
+  
 };
 
+
+long long base8_to_long(string N) {
+	long long res = 0;
+	for (int i = 0; i < N.size(); ++i) {
+		res = res * 8 + int(N[i] - '0');
+	}
+	return res;
+}
+string long_to_base9(long long N) {
+	if (N == 0) {
+		return "0";
+	}
+	string res;
+	while (N > 0) {
+		res = char(N % 9 + '0') + res;
+		N /= 9;
+	}
+	return res;
+}
+
+
+// 1 以上 N 以下の整数が素数かどうかを返す
+vector<bool> Eratosthenes(int N) {
+    // テーブル
+    vector<bool> isprime(N+1, true);
+
+    // 1 は予めふるい落としておく
+    isprime[1] = false;
+
+    // ふるい
+    //for(auto p:st){
+    for (int p = 2; p <= N; ++p) {
+        // すでに合成数であるものはスキップする
+        if (!isprime[p]) continue;
+
+        // p 以外の p の倍数から素数ラベルを剥奪
+        /*if(p<=N){
+            isprime[p]=false;
+        }*/
+        for (int q = p * 2; q <= N; q += p) {
+            isprime[q] = false;
+        }
+    }
+
+    // 1 以上 N 以下の整数が素数かどうか
+    return isprime;
+}
 
 
 
 int main() {
-    
-
-
+    unsigned long long l,r;
+    unsigned long long ans=0;
+    cin>>l>>r;
+    string s,t;
+    s=to_string(l),t=to_string(r);
+    rep(i,s.size(),t.size()+1){
+        unsigned long long a=0;
+        unsigned long long L=0;
+        unsigned long long sum=0;
+        unsigned long long n=0;
+        if(s.size()==t.size()){
+            a=l;
+            L=r;
+            //cout<<a<<endl;
+            //cout<<L<<endl;
+        }
+        else if(i==s.size()){
+            a=l;
+            L=(ll)(ism(10,i));
+            L--;
+        }
+        else if(i==t.size()){
+            a=(ll)(ism(10,i-1));
+            L=r;
+        }
+        else{
+            a=(ll)(ism(10,i-1));
+            L=(ll)(ism(10,i));
+            L--;
+        }
+        //cout<<"a"<<a<<endl;
+        //cout<<L<<endl;
+        n=L-a+1;
+        ll t=a+L;
+        t%=mod;
+        n%=mod;
+        //cout<<n<<endl;
+        sum=((t*n)%mod)*modinv(2,mod);
+        //cout<<sum<<endl;
+        ans=(ans+((sum*i)))%mod;
+    }
+    //cout<<c<<endl;
+    cout<<ans<<endl;
 }
    
-

@@ -630,13 +630,44 @@ struct Clock{
     }
 };
 
+bool check(ll a,ll b,ll c,ll d){
+    if (a + b == c + d) return true;
+    if (a - b == c - d) return true;
+    if (abs(a - c) + abs(b - d) <= 3) return true;
+    return false;
+}
+
 
 
 
 int main() {
-    
+    ll a,b,c,d;
+    cin>>a>>b>>c>>d;
+    if(a==c&&b==d){
+        cout<<0<<endl;
+        exit(0);
+    }
+    else{
+        if(check(a,b,c,d)){
+            cout<<1<<endl;
+            exit(0);
+        }
+        rep(i,-3,4){
+            rep(j,-3,4){
+                if(check(a,b,a+i,b+j)&&check(a+i,b+j,c,d)){
+                    cout<<2<<endl;
+                    exit(0);
+                }
+            }
+        }
+        if((a+b)%2==(c+d)%2){
+            cout<<2<<endl;
+            exit(0);
+        }
+        cout<<3<<endl;
 
-
+    }
 }
    
 
+    

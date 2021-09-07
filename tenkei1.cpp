@@ -630,13 +630,49 @@ struct Clock{
     }
 };
 
+ll n,l,k;
+V a;
+bool judge(ll m){
+    ll cnt=0,t=0;
+    rep(i,0,n){
+        if(a[i]-t>=m&&l-a[i]>=m){
+            cnt++;
+            t=a[i];
+        }
+    }
+    if(cnt>=k){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 
 
 int main() {
+    cin>>n>>l>>k;
+    a.resize(n);
+    rep(i,0,n){
+        cin>>a[i];
+    }
+    ll ok=0,ng=1000000001;
+    while(ng-ok>1){
+        ll mid=ok+(ng-ok)/2;
+        if(judge(mid)){
+            ok=mid;
+        }
+        else{
+            ng=mid;
+        }
+    }
+    cout<<ok<<endl;
     
+    
+
 
 
 }
    
 
+    

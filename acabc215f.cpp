@@ -628,15 +628,62 @@ struct Clock{
         }    	
     	
     }
+  
+  
 };
 
+ll n;
+V b;
+vector<P>a;
+V ymax,ymin;
 
+bool judge(ll mid){
+    rep(i,0,n){
+        ll c=b[i];
+        ll p=(ll)(lower_bound(all(b),c+mid)-b.begin());
+        if(p==n){
+            continue;
+        }
+        if(ymax[p]-a[i].second>=mid ||a[i].second-ymin[p]>=mid){
+            return true;
+        }
+    }
+    return false;
+}
 
 
 int main() {
-    
+    cin>>n;
+    rep(i,0,n){
+        ll x,y;
+        cin>>x>>y;
+        a.push_back({x,y});
+    }
+    sort(all(a));
+    rep(i,0,n){
+        b.push_back(a[i].first);
+    }
+    ymax.resize(n),ymin.resize(n);
+    ymax[n-1]=a[n-1].second;
+    ymin[n-1]=a[n-1].second;
+    rrep(i,n-2,-1){
+        ymax[i]=max(ymax[i+1],a[i].second);
+        ymin[i]=min(ymin[i+1],a[i].second);
+    }
+    ll ok=0,ng=1000000001;
+    while(ng-ok>1){
+        ll mid=ok+(ng-ok)/2;
+        if(judge(mid)){
+            ok=mid;
+        }
+        else{
+            ng=mid;
+        }
+    }
+    cout<<ok<<endl;
 
-
+   
 }
    
 
+    

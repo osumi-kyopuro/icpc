@@ -32,7 +32,7 @@ const ll MAX = 510000;
 const ll MOD = 1000000007;
 using namespace std;
 using graph = vector<vector<ll>>;
-struct edge{
+struct edge1000000000{
     //辺の重みを管理できるような構造体
 	//コンストラクタによって簡単に値を入れられるようにしている
 	//operatorは辺の重みでソート出来るようにしている
