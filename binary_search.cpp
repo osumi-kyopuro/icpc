@@ -4,7 +4,7 @@
 using namespace std;
 #define all(a) (a).begin(), a.end()
 int main(){
-    /*1があるか二分探索で求めるプログラム*/
+    /*1があるか二分探索で求めるプログラム(修正済み)*/
     vector<int>card={5,3,2,1,4};
     sort(all(card));//昇順ソートする
     int ok=-1,ng=5;//区間を決める
