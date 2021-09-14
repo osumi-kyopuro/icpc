@@ -421,7 +421,7 @@ struct all_init
 {
     all_init()
     {
-        cout << fixed << setprecision(30);
+        cout << fixed << setprecision(9);
     }
 } All_init;
 
@@ -628,15 +628,54 @@ struct Clock{
         }    	
     	
     }
-  
-  
 };
+
+ll k;
+vector<ll>a;
+bool judge(ll mid){
+    ll cnt=0,t=0;
+    //cout<<mid<<endl;
+    rep(i,0,a.size()){
+        if(a[i]-t>=mid){
+            t=a[i];
+            cnt++;
+        }
+    }
+    if(cnt>=k+1){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+
 
 
 
 int main() {
-    
+    ll n,m;
+    cin>>n>>m;
+    vector<ll>a(n),b(m);
+    rep(i,0,n){
+        cin>>a[i];
+    }
+    rep(i,0,m){
+        cin>>b[i];
+    }
+    sort(all(a));
+    sort(all(b));
+    ll ans=LLONG_MAX;
+    rep(i,0,n){
+        ll j=lower_bound(all(b),a[i])-b.begin();
+        if(j<m){
+            ans=min(ans,abs(b[j]-a[i]));
+        }
+        if(j>0){
+            ans=min(ans,abs(b[j-1]-a[i]));
+        }
+    }
+    cout<<ans<<endl;    
 }
    
 
-    

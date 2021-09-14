@@ -635,7 +635,77 @@ struct Clock{
 
 
 int main() {
-    
+    ll n;
+    cin>>n;
+    //vector<C>s(n*10,C(n*10));
+    vector<string>s(n),t(n);
+    rep(i,0,n){
+        cin>>s[i];
+    }
+    rep(j,0,n){
+        cin>>t[j];
+    }
+    ll kis=LLONG_MAX,kjs=LLONG_MAX;
+    ll kib=-1,kjb=-1;
+    rep(i,0,n){
+        rep(j,0,n){
+            if(s[i][j]=='#'){
+                kis=min(kis,i);
+                kib=max(kib,i);
+                kjs=min(kjs,j);
+                kjb=max(kjb,j);
+            }
+        }
+    }
+    ll kis2=LLONG_MAX,kjs2=LLONG_MAX;
+    ll kib2=-1,kjb2=-1;
+    rep(i,0,n){
+        rep(j,0,n){
+            if(t[i][j]=='#'){
+                kis2=min(kis2,i);
+                kib2=max(kib2,i);
+                kjs2=min(kjs2,j);
+                kjb2=max(kjb2,j);
+            }
+        }
+    }
+    /*cout<<"kis="<<kis<<endl;
+    cout<<"kib="<<kib<<endl;
+    cout<<"kjs="<<kjs<<endl;
+    cout<<"kjb="<<kjb<<endl;
+    cout<<"kis2="<<kis2<<endl;
+    cout<<"kib2="<<kib2<<endl;
+    cout<<"kjs2="<<kjs2<<endl;
+    cout<<"kjb2="<<kjb2<<endl;*/
+    bool flag=true;
+    rep(i,kis,kib+1){
+        rep(j,kjs,kjb+1){
+
+            if(kib2-(j-kjs)<0){
+                flag=false;
+                break;
+            }
+            if(kjs2+(i-kis)>=n){
+                flag=false;
+                break;
+            }
+            //cout<<kib2  <<kib2-(j-kjs)<<endl;
+            if(s[i][j]!=t[kib2-(j-kjs)][kjs2+(i-kis)]){
+                flag=false;
+                break;
+            }
+        }
+        if(!flag){
+            break;
+        }
+    }
+    if(flag){
+        cout<<"Yes"<<endl;
+    }
+    else{
+        cout<<"No"<<endl;
+    }
+
 }
    
 

@@ -421,7 +421,7 @@ struct all_init
 {
     all_init()
     {
-        cout << fixed << setprecision(30);
+        cout << fixed << setprecision(9);
     }
 } All_init;
 
@@ -633,8 +633,46 @@ struct Clock{
 };
 
 
-
 int main() {
+    string s;
+    cin>>s;
+    s.insert(0," ");
+    //dp[i][j]:=sの先頭j文字までで「tech」の先頭i文字を作る方法の数
+
+    vector<V>dp(9,V(s.size()));
+    vector<char>c(9);
+    c[1]='c',c[2]='h';
+    c[3]='o',c[4]='k';
+    c[5]='u',c[6]='d';
+    c[7]='a',c[8]='i';
+    
+    //初期化
+    //dp[i][j]=1(i=0,0<=j)
+    //dp[i][j]=0(0<i,j=0)
+
+    rep(j,0,s.size()){
+        dp[0][j]=1;
+    }
+
+
+    //遷移
+    //もしsのj文字目とtのi文字目が一致している場合
+    //dp[i][j]=dp[i-1][j-1]+dp[i][j-1]
+    //それ以外
+    //dp[i][j]=dp[i][j-1]
+
+    rep(i,1,9){
+        rep(j,1,s.size()){
+            if(c[i]==s[j]){
+                dp[i][j]=(dp[i-1][j-1]+dp[i][j-1])%mod;
+            }
+            else{
+                dp[i][j]=dp[i][j-1];
+            }
+        }
+    }
+    cout<<dp[8][s.size()-1]<<endl;
+
     
 }
    

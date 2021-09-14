@@ -632,10 +632,37 @@ struct Clock{
   
 };
 
+ll r,b,x,y;
+
+bool judge(ll mid){
+    if((r-mid)<0||b-mid<0){
+        return false;
+    }
+    ll s=(r-mid)/(x-1);
+    ll t=(b-mid)/(y-1);
+    if(s>=0&&t>=0&&s+t>=mid){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 
 int main() {
-    
+    cin>>r>>b>>x>>y;
+    ll ok=0,ng=1e18+1;
+    while(ng-ok>1){
+        ll mid=ok+(ng-ok)/2;
+        if(judge(mid)){
+            ok=mid;
+        }
+        else{
+            ng=mid;
+        }
+    }
+    cout<<ok<<endl;
+
 }
    
 

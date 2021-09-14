@@ -632,10 +632,65 @@ struct Clock{
   
 };
 
+ll n;
+vector<P>sxy,txy;
+vector<string>s;
+vector<string>t;
+void rot(){
+    vector<P>tmp;
+    rep(i,0,txy.size()){
+        tmp.push_back({n-1-txy[i].second,txy[i].first});
+    }
+    sort(all(tmp));
+    txy=tmp;
+}
 
-
+void count(){
+    rep(i,0,n){
+        rep(j,0,n){
+            if(s[i][j]=='#'){
+                sxy.push_back({i,j});
+            }
+        }
+    }
+    rep(i,0,n){
+        rep(j,0,n){
+            if(t[i][j]=='#'){
+                txy.push_back({i,j});
+            }
+        }
+    }
+    sort(all(sxy));
+    sort(all(txy));
+}
 int main() {
-    
+    cin>>n;
+    s.resize(n),t.resize(n);
+    rep(i,0,n)cin>>s[i];
+    rep(i,0,n)cin>>t[i];
+    count();
+    if(txy.size()!=sxy.size()){
+        cout<<"No"<<endl;
+        exit(0);
+    }
+    rep(i,0,4){
+        rot();
+        bool flag=true;
+        ll dy=sxy[0].first-txy[0].first;
+        ll dx=sxy[0].second-txy[0].second;
+        rep(j,1,txy.size()){
+            if(txy[j].first+dy != sxy[j].first || txy[j].second+dx != sxy[j].second){
+                flag=false;
+            }
+        }
+        if(flag){
+            cout<<"Yes"<<endl;
+            exit(0);
+        }
+    }
+    cout<<"No"<<endl;
+
+
 }
    
 
