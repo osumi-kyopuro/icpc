@@ -23,9 +23,8 @@
 #define ll long long
 #define rep(i, s, n) for (ll i = (ll)(s); i < (ll)(n); i++)
 #define rrep(i, s, n) for (ll i = (ll)(s); i > (ll)(n); i--)
-#define all(a) (a).begin(), a.end()
+#define all(a) (a).begin(), (a).end()
 #define rall(a) (a).rbegin(),(a).rend()
-#define PI 3.14159265359
 #define mod 1000000007
 #define P pair<ll, ll>
 #define V vector<ll>
@@ -33,7 +32,7 @@
 #define B vector<bool>
 #define endl '\n'
 const ll MAX = 510000;
-const ll MOD =1000000007;
+const ll MOD =998244353;
 using namespace std;
 using graph = vector<vector<ll>>;
 struct edge{
@@ -165,11 +164,7 @@ ll lcm(ll a, ll b)
     return a / gcd(a, b) * b;
 }
 
-/*二点間の距離*/
-double dist(pair<double, double> a, pair<double, double> b)
-{
-    return sqrt(pow((a.first - b.first), 2) + pow((a.second - b.second), 2));
-}
+
 
 //繰り返し自乗法
 double ism(double aa, ll p)
@@ -534,109 +529,216 @@ struct Zip{
     }
 };
 
+// aよりもbが大きいならばaをbで更新する
+// (更新されたならばtrueを返す)
+template <typename T>
+bool chmax(T &a, const T& b) {
+  if (a < b) {
+    a = b;  // aをbで更新
+    return true;
+  }
+  return false;
+}
+// aよりもbが小さいならばaをbで更新する
+// (更新されたならばtrueを返す)
+template <typename T>
+bool chmin(T &a, const T& b) {
+  if (a > b) {
+    a = b;  // aをbで更新
+    return true;
+  }
+  return false;
+}
 
-// 以下に、24時間表記の時計構造体 Clock を定義する
-struct Clock{
-    int hour;    //時間を表す (0~23の値をとる)
-	int minute;  //分を表す   (0~59の値をとる)
-	int second;  //秒を表す   (0~59の値をとる)
+// 負の数にも対応した % 演算
+long long modxx(long long val, long long m) {
+  long long res = val % m;
+  if (res < 0) res += m;
+  return res;
+}
 
-// メンバ関数 set の定義を書く
-//   関数名: set
-//   引数: int h, int m, int s (それぞれ時、分、秒を表す)
-//   返り値: なし
-//   関数の説明:
-//     時・分・秒を表す3つの引数を受け取り、
-//     それぞれ、メンバ変数 hour, minute, second に代入する
-	void set(int h,int m,int s){
-    	hour=h;
-     	minute=m;
-      	second=s;
-    }
-     
-     
-// メンバ関数 to_str の定義を書く
-//   関数名: to_str
-//   引数: なし
-//   返り値: string型
-//   関数の仕様:
-//     メンバ変数が表す時刻の文字列を返す
-//     時刻の文字列は次のフォーマット
-//     "HH:MM:SS"
-//     HH、MM、SSはそれぞれ時間、分、秒を2桁で表した文字列
-	string to_str(){
-    	string res;
-    	if(hour<10){
-        	res+="0";
+/*二点間の距離*/
+long double dist(pair<long double, long double> a, pair<long double, long double> b)
+{
+    return sqrt(pow((a.first - b.first), 2) + pow((a.second - b.second), 2));
+}
+
+/*二点間の距離*/
+long double dist2(pair<long double, long double> a, pair<long double, long double> b)
+{
+    return (a.first - b.first)*(a.first - b.first) + (a.second - b.second)*(a.second - b.second);
+}
+
+long double  kt(pair<long double, long double> a, pair<long double, long double> b){
+    return abs((a.second-b.second)/(a.first-b.first));
+}
+
+/*
+https://github.com/key-moon/Library/blob/master/src/Algorithm/rerooting.csx
+keymoon による C# の実装を noshi91 が C++ に移植したものです
+*/
+
+#include <functional>
+#include <stack>
+#include <vector>
+
+template <class T> class ReRooting {
+public:
+    int NodeCount;
+
+private:
+    std::vector<std::vector<int>> Adjacents;
+    std::vector<std::vector<int>> IndexForAdjacent;
+
+    std::vector<T> Res;
+    std::vector<std::vector<T>> DP;
+
+    T Identity;
+    std::function<T(T, T)> Operate;
+    std::function<T(T, int)> OperateNode;
+
+public:
+    ReRooting(int nodeCount, std::vector<std::vector<int>> edges, T identity,
+                std::function<T(T, T)> operate,
+                std::function<T(T, int)> operateNode) {
+        NodeCount = nodeCount;
+
+        Identity = identity;
+        Operate = operate;
+        OperateNode = operateNode;
+
+        std::vector<std::vector<int>> adjacents(nodeCount);
+        std::vector<std::vector<int>> indexForAdjacents(nodeCount);
+
+        for (int i = 0; i < edges.size(); i++) {
+            auto &edge = edges[i];
+            indexForAdjacents[edge[0]].push_back(adjacents[edge[1]].size());
+            indexForAdjacents[edge[1]].push_back(adjacents[edge[0]].size());
+            adjacents[edge[0]].push_back(edge[1]);
+            adjacents[edge[1]].push_back(edge[0]);
         }
-      	res+=to_string(hour);
-      	res+=":";
-      	if(minute<10){
-        	res+="0";
+
+        Adjacents = std::vector<std::vector<int>>(nodeCount);
+        IndexForAdjacent = std::vector<std::vector<int>>(nodeCount);
+        for (int i = 0; i < nodeCount; i++) {
+            Adjacents[i] = adjacents[i];
+            IndexForAdjacent[i] = indexForAdjacents[i];
         }
-      	res+=to_string(minute);
-      	res+=":";
-      	if(second<10){
-        	res+="0";
-        }
-      	res+=to_string(second);
-      	return res;
+
+        DP = std::vector<std::vector<T>>(Adjacents.size());
+        Res = std::vector<T>(Adjacents.size());
+
+        for (int i = 0; i < Adjacents.size(); i++)
+            DP[i] = std::vector<T>(Adjacents[i].size());
+        if (NodeCount > 1)
+            Initialize();
+        else if (NodeCount == 1)
+            Res[0] = OperateNode(Identity, 0);
     }
 
-// メンバ関数 shift の定義を書く
-//   関数名: shift
-//   引数: int diff_second
-//   返り値: なし
-//   関数の仕様:
-//     diff_second 秒だけメンバ変数が表す時刻を変更する(ただし、日付やうるう秒は考えない)
-//     diff_second の値が負の場合、時刻を戻す
-//     diff_second の値が正の場合、時刻を進める
-//     diff_second の値は -86400 ~ 86400 の範囲を取とりうる
-  	void shift(int diff_second){
-    	int diff_hour=diff_second/3600;
-      	diff_second%=3600;
-      	int diff_minute=diff_second/60;
-      	diff_second%=60;
-      
-      	second+=diff_second;
-      	if(second>=60){
-        	second-=60;
-          	minute+=1;
+    T Query(int node) { return Res[node]; }
+
+private:
+    void Initialize() {
+        std::vector<int> parents(NodeCount);
+        std::vector<int> order(NodeCount);
+
+#pragma region InitOrderedTree
+        int index = 0;
+        std::stack<int> stack;
+        stack.push(0);
+        parents[0] = -1;
+        while (stack.size() > 0) {
+            auto node = stack.top();
+            stack.pop();
+            order[index++] = node;
+            for (int i = 0; i < Adjacents[node].size(); i++) {
+                auto adjacent = Adjacents[node][i];
+                if (adjacent == parents[node])
+                    continue;
+                stack.push(adjacent);
+                parents[adjacent] = node;
+            }
         }
-      	else if(second<0){
-        	second+=60;
-          	minute-=1;
+#pragma endregion
+
+#pragma region fromLeaf
+        for (int i = order.size() - 1; i >= 1; i--) {
+            auto node = order[i];
+            auto parent = parents[node];
+
+            T accum = Identity;
+            int parentIndex = -1;
+            for (int j = 0; j < Adjacents[node].size(); j++) {
+                if (Adjacents[node][j] == parent) {
+                    parentIndex = j;
+                    continue;
+                }
+                accum = Operate(accum, DP[node][j]);
+            }
+            DP[parent][IndexForAdjacent[node][parentIndex]] =
+                OperateNode(accum, node);
         }
-      
-      	minute+=diff_minute;
-      	if(minute>=60){
-        	minute-=60;
-          	hour+=1;
+#pragma endregion
+
+#pragma region toLeaf
+        for (int i = 0; i < order.size(); i++) {
+            auto node = order[i];
+            T accum = Identity;
+            std::vector<T> accumsFromTail(Adjacents[node].size());
+            accumsFromTail[accumsFromTail.size() - 1] = Identity;
+            for (int j = accumsFromTail.size() - 1; j >= 1; j--)
+                    accumsFromTail[j - 1] = Operate(DP[node][j], accumsFromTail[j]);
+            for (int j = 0; j < accumsFromTail.size(); j++) {
+                DP[Adjacents[node][j]][IndexForAdjacent[node][j]] =
+                    OperateNode(Operate(accum, accumsFromTail[j]), node);
+                accum = Operate(accum, DP[node][j]);
+            }
+            Res[node] = OperateNode(accum, node);
         }
-      	else if(minute<0){
-        	minute+=60;
-          	hour-=1;
-        }
-      
-      
-      	hour+=diff_hour;
-      	if(hour>=24){
-        	hour-=24;
-        }
-      	else if(hour<0){
-        	hour+=24;
-        }    	
-    	
+#pragma endregion
     }
-  
-  
 };
+
+
+// グラフ、頂点の入次数、頂点数を受け取り、そのトポロジカルソートを記録した配列を返す関数
+vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int V2) {
+    // トポロジカルソートを記録する配列
+    vector<int> sorted_vertices;
+
+    // 入次数が0の頂点を発見したら、処理待ち頂点としてキューに追加する
+    queue<int> que;
+    for (int i = 0; i < V2; i++) {
+        if (indegree[i] == 0) {
+            que.push(i);
+        }
+    }
+
+    // キューが空になるまで、操作1~3を繰り返す
+    while (que.empty() == false) {
+        // キューの先頭の頂点を取り出す
+        int v = que.front();
+        que.pop();
+
+        // その頂点と隣接している頂点の入次数を減らし、0になればキューに追加
+        for (int i = 0; i < G2[v].size(); i++) {
+            int u = G2[v][i];
+            indegree[u] -= 1;
+            if (indegree[u] == 0) que.push(u);
+        }
+        // 頂点vを配列の末尾に追加する 
+        sorted_vertices.push_back(v);
+    }
+
+    // トポロジカルソートを返す
+    return sorted_vertices;
+}
+
 
 
 
 int main() {
     
 }
-   
 
     

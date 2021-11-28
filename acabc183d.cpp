@@ -468,25 +468,21 @@ struct all_init
 
 
 int main() {
-    ll n,w,mt=0;
+    ll n,w;
     cin>>n>>w;
-    V s(n),t(n),p(n);
-    rep(i,0,n){
-        cin>>s[i]>>t[i]>>p[i];
-        mt=max(t[i],mt);
+    bool flag=true;//供給成功フラグ
+    vector<ll>a(200005);//時刻iのお湯供給量
+    for(int i=0;i<n;i++){
+        ll s,t,p;
+        cin>>s>>t>>p;
+        a[s]+=p;
+        a[t]-=p;
     }
-    V sum(mt+5);
-    rep(i,0,n){
-        sum[s[i]]+=p[i];
-        sum[t[i]]+=-p[i];
+    for(int j=1;j<a.size();j++){
+        a[j]+=a[j-1];
     }
-    rep(i,1,mt+5){
-        sum[i]+=sum[i-1];
-    }
-    bool flag=true;
-    rep(i,0,mt+5){
-        //cout<<sum[i]<<endl;
-        if(sum[i]>w){
+    for(int j=0;j<a.size();j++){
+        if(a[j]>w){
             flag=false;
         }
     }
@@ -496,6 +492,5 @@ int main() {
     else{
         cout<<"No"<<endl;
     }
-    
 
 }
