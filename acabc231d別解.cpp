@@ -734,56 +734,39 @@ vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int
     return sorted_vertices;
 }
 
-ll n;
-vector<ll>p;
-set<ll>ans;
-void fun(ll node,set<ll>& st,graph& g,vector<bool>& pass){
-    for(auto child:g[node]){
-        if(st.find(p[child])==st.end()){
-            pass[child]=true;
-            //cout<<child+1<<endl;
-            ans.insert(child+1);
-            st.insert(p[child]);
-            fun(child,st,g,pass);
-            st.erase(p[child]);
-        }
-        else if(!pass[child]){
-            pass[child]=true;
-            fun(child,st,g,pass);
-        }
-    }
-}
-
-
 
 
 
 int main() {
-    cin>>n;
-    p.resize(n);
-    graph g(n);
-    rep(i,0,n){
-        cin>>p[i];
-    }
-
-    rep(i,0,n-1){
+    ll n,m;
+    cin>>n>>m;
+    map<ll,ll>mp;
+    UnionFind uf(n);
+    bool flag=true;
+    rep(i,0,m){
         ll a,b;
         cin>>a>>b;
-        --a,--b;
-        g[a].push_back(b);
-        g[b].push_back(a);
+        --a,--b;        
+        if(uf.issame(a,b)){
+            flag=false;
+        }
+        uf.merge(a,b);
+        mp[a]++;
+        mp[b]++;
     }
-    rep(i,0,n){
-        sort(all(g[i]));
+    for(auto x:mp){
+        if(x.second>=3){
+            flag=false;
+        }
     }
-    set<ll>st;
-    st.insert(p[0]);
-    ans.insert(1);
-    vector<bool>pass(n,false);
-    pass[0]=true;
-    fun(0,st,g,pass);
-    for(auto x:ans){
-        cout<<x<<endl;
+    
+    
+    if(flag){
+        cout<<"Yes"<<endl;
+    }
+    else{
+        cout<<"No"<<endl;
     }
 
+ 
 }

@@ -739,6 +739,6 @@ vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int
 
 int main() {
     
-}
 
-    
+ 
+}
