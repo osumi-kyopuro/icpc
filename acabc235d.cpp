@@ -821,9 +821,70 @@ string long_to_base(long long N,long long k) {
 }
 
 
+void func(ll x,ll s){
+    if(x%a==0){
+        if(mp.count(x/a)==0||mp[x/a]>s+1){
+            mp[x/a]=s+1;
+            func(x/a,s+1);    
+        }   
+    }
+            
+    string z=to_string(x);
+    z=z.substr(1,z.size()-1)+z[0];
+    if(z[0]!='0'&&(mp.count(stoll(z))==0||mp[stoll(z)]>s+1)){
+        mp[stoll(z)]=s+1;
+        func(stoll(z),s+1);    
+    }
+}
+
+
+
+
 
 
 
 int main() {
+    ll a,n;
+    cin>>a>>n;
+    queue<P>que;
+    que.push({1,0});
+    vector<ll>vc(n*10+1,-1);
+    vc[1]=0;
+    while(!que.empty()){
+        P p=que.front();
+        que.pop();
+        ll x=p.first;
+        ll s=p.second;
+        if(x*a<n*10&&vc[x*a]==-1){
+            vc[x*a]=s+1;
+            que.push({x*a,s+1});  
+        }
+        if(x>=10&&x%10!=0){
+
+
+            ll d=x%10;
+            x/=10;
+            ll c=10;
+            while(true){
+                if(x<c){
+                    break;
+                }
+                c*=10;
+            }
+            ll k=d*c+x;
+            
+            if(k>=n*10){
+                continue;
+            }
+            if(vc[k]==-1){
+                vc[k]=s+1;
+                que.push({k,s+1});
+            }
+        }
+    }
     
+    
+    cout<<vc[n]<<endl;    
+    
+
 }

@@ -20,6 +20,10 @@
 #include<string.h>
 #include <iterator>
 #include <bits/stdc++.h>
+#include <cctype>
+using namespace std;
+typedef string::const_iterator State;
+class ParseError {};
 #define ll long long
 #define rep(i, s, n) for (ll i = (ll)(s); i < (ll)(n); i++)
 #define rrep(i, s, n) for (ll i = (ll)(s); i > (ll)(n); i--)
@@ -33,8 +37,11 @@
 #define endl '\n'
 const ll MAX = 510000;
 const ll MOD =998244353;
-using namespace std;
 using graph = vector<vector<ll>>;
+int term(State &begin);
+int number(State &begin);
+int expression(State &begin);
+int factor(State &begin);
 struct edge{
     //辺の重みを管理できるような構造体
 	//コンストラクタによって簡単に値を入れられるようにしている
@@ -75,7 +82,7 @@ vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph) {
 		if (d[v] < p.first) {
 			continue;
 		}
-		for (auto x : Graph[v]) {
+		for (auto& x : Graph[v]) {
 			if (d[x.to] > d[v] + x.cost) {
 				d[x.to] = d[v] + x.cost;
 				q.push({d[x.to], x.to});
@@ -516,7 +523,7 @@ struct Zip{
             mp[a[i]]=0;    
         }
         ll size=0;
-        for(auto &x:mp){//&はコンテナの値変更可能
+        for(auto& x:mp){//&はコンテナの値変更可能
             x.second=size;
             size++;    
         }
@@ -734,38 +741,106 @@ vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int
     return sorted_vertices;
 }
 
-ll n;
-vector<ll>p;
-set<ll>ans;
-void fun(ll node,set<ll>& st,graph& g,vector<bool>& pass){
-    for(auto child:g[node]){
-        if(st.find(p[child])==st.end()){
-            pass[child]=true;
-            //cout<<child+1<<endl;
-            ans.insert(child+1);
-            st.insert(p[child]);
-            fun(child,st,g,pass);
-            st.erase(p[child]);
+// 四則演算の式をパースして、その評価結果を返す。
+int expression(State &begin) {
+    int ret=term(begin);
+    while(true){
+        if(*begin == '+'){
+            begin++;
+            ret+=term(begin);
         }
-        else if(!pass[child]){
-            pass[child]=true;
-            fun(child,st,g,pass);
+        else if(*begin == '-'){
+            begin++;
+            ret-=term(begin);
         }
+        else{
+            break;
+        }
+    }
+    cout<<"expr"<<ret<<endl;
+    return ret;
+}
+
+// 乗算除算の式をパースして、その評価結果を返す。
+int term(State &begin) {
+    int p=factor(begin);
+    while(true){
+        if(*begin == '*'){
+            begin++;
+            p*=factor(begin);
+        }
+        else if(*begin == '/'){
+            begin++;
+            p/=factor(begin);
+        }
+        else{
+            break;
+        }
+    }
+    cout<<"term"<<p<<endl;
+    return p;
+}
+
+int factor(State &begin){
+    if(*begin == '('){
+        begin++;
+        int t = expression(begin);
+        begin++;
+        cout<<"fact"<<t<<endl;
+        return t;
+    }else{
+        int ret=number(begin);
+        cout<<"fact"<<ret<<endl;
+        return ret;
+    }
+}
+
+// 数字の列をパースして、その数を返す。
+int number(State &begin) {
+    int ret = 0;
+
+    while (isdigit(*begin)) {
+        ret *= 10;
+        ret += *begin - '0';
+        begin++;
+    }
+    cout<<"num"<<ret<<endl;
+    return ret;
+}
+
+vector<ll>ans;
+vector<ll>color;
+graph g;
+vector<bool>point;
+void dfs(ll k,set<ll>& st){
+    point[k]=true;
+    for(auto x:g[k]){
+        if(!point[x]){
+            if(st.count(color[x])==0){
+                ans.push_back(x+1);
+                st.insert(color[x]);
+                dfs(x,st);
+                st.erase(color[x]);
+            }
+            else{
+                dfs(x,st);
+            }
+        }
+
     }
 }
 
 
 
 
-
 int main() {
+    ll n;
     cin>>n;
-    p.resize(n);
-    graph g(n);
+    color.resize(n);
     rep(i,0,n){
-        cin>>p[i];
+        cin>>color[i];
     }
-
+    g.resize(n);
     rep(i,0,n-1){
         ll a,b;
         cin>>a>>b;
@@ -773,17 +848,17 @@ int main() {
         g[a].push_back(b);
         g[b].push_back(a);
     }
-    rep(i,0,n){
-        sort(all(g[i]));
-    }
     set<ll>st;
-    st.insert(p[0]);
-    ans.insert(1);
-    vector<bool>pass(n,false);
-    pass[0]=true;
-    fun(0,st,g,pass);
-    for(auto x:ans){
-        cout<<x<<endl;
+    point.resize(n);
+    rep(i,0,n){
+        point[i]=false;
+    }
+    st.insert(color[0]);
+    dfs(0,st);
+    ans.push_back(1);
+    sort(all(ans));
+    rep(i,0,ans.size()){
+        cout<<ans[i]<<endl;
     }
 
 }

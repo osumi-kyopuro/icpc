@@ -22,26 +22,27 @@
 #include <bits/stdc++.h>
 #include <cctype>
 using namespace std;
-typedef string::const_iterator State;
-class ParseError {};
 #define ll long long
+typedef string::const_iterator State;
+typedef map<char,ll> rsp;
+class ParseError {};
 #define rep(i, s, n) for (ll i = (ll)(s); i < (ll)(n); i++)
 #define rrep(i, s, n) for (ll i = (ll)(s); i > (ll)(n); i--)
 #define all(a) (a).begin(), (a).end()
 #define rall(a) (a).rbegin(),(a).rend()
-#define mod 1000000007
 #define P pair<ll, ll>
 #define V vector<ll>
 #define C vector<char>
 #define B vector<bool>
 #define endl '\n'
 const ll MAX = 510000;
+const ll mod = 1000000007;
 const ll MOD =998244353;
 using graph = vector<vector<ll>>;
-int term(State &begin);
-int number(State &begin);
-int expression(State &begin);
-int factor(State &begin);
+rsp term(State &begin);
+rsp number(State &begin);
+rsp expression(State &begin);
+rsp factor(State &begin);
 struct edge{
     //辺の重みを管理できるような構造体
 	//コンストラクタによって簡単に値を入れられるようにしている
@@ -82,7 +83,7 @@ vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph) {
 		if (d[v] < p.first) {
 			continue;
 		}
-		for (auto& x : Graph[v]) {
+		for (auto x : Graph[v]) {
 			if (d[x.to] > d[v] + x.cost) {
 				d[x.to] = d[v] + x.cost;
 				q.push({d[x.to], x.to});
@@ -523,7 +524,7 @@ struct Zip{
             mp[a[i]]=0;    
         }
         ll size=0;
-        for(auto& x:mp){//&はコンテナの値変更可能
+        for(auto &x:mp){//&はコンテナの値変更可能
             x.second=size;
             size++;    
         }
@@ -741,89 +742,108 @@ vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int
     return sorted_vertices;
 }
 
-// 四則演算の式をパースして、その評価結果を返す。
-int expression(State &begin) {
-    int ret=term(begin);
-    while(true){
-        if(*begin == '+'){
-            begin++;
-            ret+=term(begin);
-        }
-        else if(*begin == '-'){
-            begin++;
-            ret-=term(begin);
-        }
-        else{
-            break;
-        }
-    }
-    cout<<"expr"<<ret<<endl;
+rsp add(rsp p ,rsp q){
+    rsp ret;
+    ret['R']=((p['R']*q['R'])%mod + (p['R']*q['S'])%mod + (p['S']*q['R'])%mod)%mod;
+    ret['S']=((p['S']*q['S'])%mod + (p['S']*q['P'])%mod + (p['P']*q['S'])%mod)%mod;
+    ret['P']=((p['P']*q['P'])%mod + (p['P']*q['R'])%mod + (p['R']*q['P'])%mod)%mod;
     return ret;
 }
 
-// 乗算除算の式をパースして、その評価結果を返す。
-int term(State &begin) {
-    int p=factor(begin);
+rsp sub(rsp p ,rsp q){
+    rsp ret;
+    ret['R']=((p['R']*q['R'])%mod + (p['R']*q['P'])%mod + (p['P']*q['R'])%mod)%mod;
+    ret['S']=((p['S']*q['S'])%mod + (p['S']*q['R'])%mod + (p['R']*q['S'])%mod)%mod;
+    ret['P']=((p['P']*q['P'])%mod + (p['P']*q['S'])%mod + (p['S']*q['P'])%mod)%mod;
+    return ret;
+}
+
+rsp multi(rsp p ,rsp q){
+    rsp ret;
+    ret['R']=((p['R']*q['R'])%mod + (p['P']*q['S'])%mod + (p['S']*q['P'])%mod)%mod;
+    ret['S']=((p['S']*q['S'])%mod + (p['R']*q['P'])%mod + (p['P']*q['R'])%mod)%mod;
+    ret['P']=((p['P']*q['P'])%mod + (p['S']*q['R'])%mod + (p['R']*q['S'])%mod)%mod;
+    return ret;
+}
+
+// 四則演算の式をパースして、その評価結果を返す。
+rsp expression(State &begin) {
+    rsp p=term(begin);
     while(true){
-        if(*begin == '*'){
+        if(*begin == '+'){
             begin++;
-            p*=factor(begin);
+            rsp q=term(begin);
+            p=add(p,q);
         }
-        else if(*begin == '/'){
+        else if(*begin == '-'){
             begin++;
-            p/=factor(begin);
+            rsp q=term(begin);
+            p=sub(p,q);
         }
         else{
             break;
         }
     }
-    cout<<"term"<<p<<endl;
+    //cout<<"expr"<<p<<endl;
+    return p;
+}
+// 乗算除算の式をパースして、その評価結果を返す。
+rsp term(State &begin) {
+    rsp p=factor(begin);
+    while(true){
+        if(*begin == '*'){
+            begin++;
+            rsp q=factor(begin);
+            p=multi(p,q);
+        }
+        else{
+            break;
+        }
+    }
+    //cout<<"term"<<p<<endl;
     return p;
 }
 
-int factor(State &begin){
+rsp factor(State &begin){
     if(*begin == '('){
         begin++;
-        int t = expression(begin);
+        rsp t = expression(begin);
         begin++;
-        cout<<"fact"<<t<<endl;
+        //cout<<"fact"<<t<<endl;
         return t;
     }else{
-        int ret=number(begin);
-        cout<<"fact"<<ret<<endl;
+        rsp ret=number(begin);
+        //cout<<"fact"<<ret<<endl;
         return ret;
     }
 }
 
 // 数字の列をパースして、その数を返す。
-int number(State &begin) {
-    int ret = 0;
-
-    while (isdigit(*begin)) {
-        ret *= 10;
-        ret += *begin - '0';
-        begin++;
+rsp number(State &begin) {
+    rsp ret;
+    if(*begin != '?'){
+        ret[*begin]=1;
     }
-    cout<<"num"<<ret<<endl;
+    else{
+        ret['R']=1;
+        ret['S']=1;
+        ret['P']=1;
+    }
+    begin++;
+    //cout<<"num"<<ret<<endl;
     return ret;
 }
 
-string long_to_base(long long N,long long k) {
-	if (N == 0) {
-		return "0";
-	}
-	string res;
-	while (N > 0) {
-		res = char(N % k + '0') + res;
-		N /= k;
-	}
-	return res;
-}
-
-
-
-
 
 int main() {
-    
+    int n;
+    cin>>n;
+    cin.ignore();
+    string s;
+    getline(cin,s);
+    char c;
+    cin>>c;
+    State begin =s.begin();
+    rsp ans=expression(begin);
+    cout<<ans[c]<<endl;
 }

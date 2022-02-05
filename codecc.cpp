@@ -82,7 +82,7 @@ vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph) {
 		if (d[v] < p.first) {
 			continue;
 		}
-		for (auto& x : Graph[v]) {
+		for (auto x : Graph[v]) {
 			if (d[x.to] > d[v] + x.cost) {
 				d[x.to] = d[v] + x.cost;
 				q.push({d[x.to], x.to});
@@ -523,7 +523,7 @@ struct Zip{
             mp[a[i]]=0;    
         }
         ll size=0;
-        for(auto& x:mp){//&はコンテナの値変更可能
+        for(auto &x:mp){//&はコンテナの値変更可能
             x.second=size;
             size++;    
         }
@@ -807,23 +807,55 @@ int number(State &begin) {
     cout<<"num"<<ret<<endl;
     return ret;
 }
-
-string long_to_base(long long N,long long k) {
-	if (N == 0) {
-		return "0";
-	}
-	string res;
-	while (N > 0) {
-		res = char(N % k + '0') + res;
-		N /= k;
-	}
-	return res;
-}
-
-
-
-
+//graph=vector<vector<ll>>
 
 int main() {
-    
+    ll n,m;
+    cin>>n>>m;
+    graph g(n),g1(n);
+    vector<ll>ax(n);
+    rep(i,0,m){
+        ll a,b;
+        cin>>a>>b;
+        --a,--b;
+        g[a].push_back(b);
+        g[b].push_back(a);
+    }
+    sort(all(g));
+    rep(i,0,n){
+        ax[i]=i;
+    }
+    vector<P>bx;
+    rep(i,0,m){
+        ll x,y;
+        cin>>x>>y;
+        --x,--y;
+        bx.push_back({x,y});
+    }
+    bool flag=false;
+    do{
+        rep(i,0,bx.size()){
+            g1[ax[bx[i].first]].push_back(ax[bx[i].second]);
+            g1[ax[bx[i].second]].push_back(ax[bx[i].first]);
+        }
+        sort(all(g1));
+        if(g1==g){
+            flag=true;
+            break;
+        }
+        g1.clear();
+        /*rep(i,0,ax.size()){
+            cout<<ax[i]<<" ";
+        }
+        cout<<endl;*/
+    }while(next_permutation(all(ax)));
+
+    if(flag){
+        cout<<"Yes"<<endl;
+    }
+    else{
+        cout<<"No"<<endl;
+    }
+
+
 }

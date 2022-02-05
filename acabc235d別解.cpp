@@ -820,10 +820,46 @@ string long_to_base(long long N,long long k) {
 	return res;
 }
 
+ll a,n,ans=LLONG_MAX;
+map<ll,ll>mp;
+/*枝かりした再帰*/
+void func(ll x,ll s){
+    if(x%a==0){
+        if(mp.count(x/a)==0||mp[x/a]>s+1){
+            mp[x/a]=s+1;
+            func(x/a,s+1);    
+        }   
+    }
+
+    /*rotする時は'0'に注意*/        
+    string z=to_string(x);
+    z=z.substr(1,z.size()-1)+z[0];
+    if(z[0]!='0'&&(mp.count(stoll(z))==0||mp[stoll(z)]>s+1)){
+        mp[stoll(z)]=s+1;
+        func(stoll(z),s+1);    
+    }
+}
+
+
+
 
 
 
 
 int main() {
-    
+    cin>>a>>n;
+    mp[n]=0;
+    func(n,0);
+    /*
+    for(auto &x:mp){
+        cout<<x.first<<" "<<x.second<<endl;
+    }
+    */
+    if(mp.count(1)==0){
+        cout<<-1<<endl;
+    }
+    else{
+        cout<<mp[1]<<endl;    
+    }
+
 }

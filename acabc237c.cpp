@@ -825,5 +825,63 @@ string long_to_base(long long N,long long k) {
 
 
 int main() {
-    
+    string s;
+    cin>>s;
+    string ks;
+    ks=s;
+    reverse(all(ks));
+    ll dc=0;
+    bool flag=false;
+    if(s==ks){
+        flag=true;
+    }
+    ll n=s.size();
+    if(!flag){
+        while(true){
+            if(s[n-1-dc]=='a'){
+                dc++;
+            }
+            else{
+                break;
+            }
+            if(s.size()==0){
+                flag=true;
+                break;
+            }
+        }
+    }
+    reverse(all(s));
+    s.erase(0,dc);
+    reverse(all(s));
+    ll dc2=0;
+    if(!flag){
+        while(true){
+            if(dc2<dc&&s[dc2]=='a'){
+                dc2++;
+            }
+            else{
+                break;
+            }
+            if(s.size()==0){
+                flag=true;
+                break;
+            }
+        }    
+    }
+    s.erase(0,dc2);
+    //cout<<s<<endl;
+    if(!flag){
+        ks=s;
+        reverse(all(ks));    
+    }
+    if(ks==s){
+        flag=true;
+    }
+    if(flag){
+        cout<<"Yes"<<endl;
+    }
+    else{
+        cout<<"No"<<endl;
+    }
+
 }

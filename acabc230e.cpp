@@ -825,5 +825,15 @@ string long_to_base(long long N,long long k) {
 
 
 int main() {
-    
+    double n;
+    cin>>n;
+    ll ans=0;
+    ll k=sqrt(n);
+    for(ll i=1;i<=k;i++){
+        ans+=floor(n/i);
+    }
+    ans*=2;
+    ans-=pow(k,2);
+    cout<<ans<<endl;
+
 }

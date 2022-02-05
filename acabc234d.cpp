@@ -825,5 +825,32 @@ string long_to_base(long long N,long long k) {
 
 
 int main() {
-    
+    ll n,k;
+    cin>>n>>k;
+    vector<ll>p(n);
+    rep(i,0,n){
+        cin>>p[i];
+    }
+    priority_queue<ll,V,greater<ll>>pq;
+    rep(i,0,k){
+        pq.push(p[i]);
+    }
+    V ans;
+    ans.push_back(pq.top());
+    rep(i,0,n-k){
+        if(pq.top()<p[i+k]){
+            pq.push(p[i+k]);
+            pq.pop();
+            ans.push_back(pq.top());
+        }
+        else{
+            ans.push_back(pq.top());
+        }
+    }
+    rep(i,0,ans.size()){
+        cout<<ans[i]<<endl;
+    }
+
+
+
 }

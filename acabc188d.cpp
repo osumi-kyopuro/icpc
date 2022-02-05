@@ -822,8 +822,30 @@ string long_to_base(long long N,long long k) {
 
 
 
-
-
 int main() {
+    ll n,cp,ans=0;
+    cin>>n>>cp;
+    map<ll,ll>mp;
+    rep(i,0,n){
+        ll a,b,c;
+        cin>>a>>b>>c;
+        mp[a]+=c;
+        mp[b+1]-=c;
+    }
+    ll time=0,m=0;
+    for(auto &x:mp){
+        ans+=min(cp,m)*(x.first-time);
+        m+=x.second;
+        time=x.first;
+    }
+    cout<<ans<<endl;
+
+
+
+
+
     
+
+
+
 }

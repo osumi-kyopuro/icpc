@@ -82,7 +82,7 @@ vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph) {
 		if (d[v] < p.first) {
 			continue;
 		}
-		for (auto& x : Graph[v]) {
+		for (auto x : Graph[v]) {
 			if (d[x.to] > d[v] + x.cost) {
 				d[x.to] = d[v] + x.cost;
 				q.push({d[x.to], x.to});
@@ -523,7 +523,7 @@ struct Zip{
             mp[a[i]]=0;    
         }
         ll size=0;
-        for(auto& x:mp){//&はコンテナの値変更可能
+        for(auto &x:mp){//&はコンテナの値変更可能
             x.second=size;
             size++;    
         }
@@ -808,22 +808,18 @@ int number(State &begin) {
     return ret;
 }
 
-string long_to_base(long long N,long long k) {
-	if (N == 0) {
-		return "0";
-	}
-	string res;
-	while (N > 0) {
-		res = char(N % k + '0') + res;
-		N /= k;
-	}
-	return res;
-}
-
-
-
-
 
 int main() {
-    
+    int N;
+    cin >> N;
+    cin.ignore();
+    for (int i = 0; i < N; i++) {
+        string s;
+        getline(cin, s);
+
+        State begin = s.begin();
+        int ans = expression(begin);
+        cout << ans << endl;
+    }
+    return 0;
 }

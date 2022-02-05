@@ -82,7 +82,7 @@ vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph) {
 		if (d[v] < p.first) {
 			continue;
 		}
-		for (auto& x : Graph[v]) {
+		for (auto x : Graph[v]) {
 			if (d[x.to] > d[v] + x.cost) {
 				d[x.to] = d[v] + x.cost;
 				q.push({d[x.to], x.to});
@@ -523,7 +523,7 @@ struct Zip{
             mp[a[i]]=0;    
         }
         ll size=0;
-        for(auto& x:mp){//&はコンテナの値変更可能
+        for(auto &x:mp){//&はコンテナの値変更可能
             x.second=size;
             size++;    
         }
@@ -807,23 +807,43 @@ int number(State &begin) {
     cout<<"num"<<ret<<endl;
     return ret;
 }
-
-string long_to_base(long long N,long long k) {
-	if (N == 0) {
-		return "0";
-	}
-	string res;
-	while (N > 0) {
-		res = char(N % k + '0') + res;
-		N /= k;
-	}
-	return res;
-}
-
+//graph=vector<vector<ll>>
 
 
 
 
 int main() {
     
+
+    vector<vector<ll>> g={{1},{3,2},{6,5,4}};
+    vector<vector<ll>> g1={{2,3},{5,6,4},{1}};
+    //auto& p=g;//gが参照するオブジェクトと同じオブジェクトを参照
+    //auto p=g;//gが参照するオブジェクトをコピーした別のオブジェクトを参照
+    for(auto& x:g){
+        sort(all(x));
+    }
+    sort(all(g));
+    for(auto& x:g1){
+        sort(all(x));
+    }
+    sort(all(g1));
+
+    for(auto& x:g){
+        for(auto y:x){
+            cout<<y<<" ";
+        }
+        cout<<endl;
+    }
+
+    for(auto& x:g1){
+        for(auto& y:x){
+            cout<<y<<" ";
+        }
+        cout<<endl;
+    }
+
+
+
+
+
 }
