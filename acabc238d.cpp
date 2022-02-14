@@ -826,9 +826,27 @@ using namespace atcoder;
 
 using mint = modint998244353;
 
-
-
 int main() {
-    
-    
+    ll t;
+    cin>>t;
+    vector<bool>ans(t,false);
+    rep(i,0,t){
+        ll a,s;
+        cin>>a>>s;
+        ll k=s-2*a;
+        if(k>=0&&(k&a)==0){
+            ans[i]=true;
+        }
+    }
+    rep(i,0,t){
+        if(ans[i]){
+            cout<<"Yes"<<endl;
+        }
+        else{
+            cout<<"No"<<endl;
+        }
+    }
+
+
+
 }

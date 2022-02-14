@@ -21,7 +21,6 @@
 #include <iterator>
 #include <bits/stdc++.h>
 #include <cctype>
-#include <atcoder/all>
 using namespace std;
 typedef string::const_iterator State;
 class ParseError {};
@@ -821,14 +820,31 @@ string long_to_base(long long N,long long k) {
 	return res;
 }
 
+set<ll>ans;
+void tousa(){
+    ll t=0;
+    rep(i,1,10){
+        rep(j,-9,9){
+            string s;
+            t=i;
+            rep(k,1,19){
+                s.push_back((char)(t+'0'));
+                t+=j;
+                ans.insert(stoll(s));
+                if(t<=-1||t>=10){
+                    break;
+                }
+            }
+        }
+    } 
+}
 
-using namespace atcoder;
-
-using mint = modint998244353;
 
 
 
 int main() {
-    
-    
+    ll x;
+    cin>>x;
+    tousa();
+    cout<<*(ans.lower_bound(x))<<endl;
 }

@@ -363,60 +363,6 @@ __int128 parse(string &s) {
 }
 
 
-//10の9乗+7でmodをとる
-template <std::uint_fast64_t Modulus> class modint {
-  using u64 = std::uint_fast64_t;
-
-public:
-  u64 a;
-
-    constexpr modint(const u64 x = 0) noexcept : a(x % Modulus) {}
-    constexpr u64 &value() noexcept { return a; }
-    constexpr const u64 &value() const noexcept { return a; }
-
-    constexpr modint operator+(const modint rhs) const noexcept {
-        return modint(*this) += rhs;
-    }
-    constexpr modint operator-(const modint rhs) const noexcept {
-        return modint(*this) -= rhs;
-    }
-    constexpr modint operator*(const modint rhs) const noexcept {
-        return modint(*this) *= rhs;
-    }
-    constexpr modint operator/(const modint rhs) const noexcept {
-        return modint(*this) /= rhs;
-    }
-    constexpr modint &operator+=(const modint rhs) noexcept {
-        a += rhs.a;
-        if (a >= Modulus) {
-        a -= Modulus;
-        }
-        return *this;
-    }
-    constexpr modint &operator-=(const modint rhs) noexcept {
-        if (a < rhs.a) {
-            a += Modulus;
-        }
-        a -= rhs.a;
-        return *this;
-    }
-    constexpr modint &operator*=(const modint rhs) noexcept {
-        a = a * rhs.a % Modulus;
-        return *this;
-    }
-    constexpr modint &operator/=(modint rhs) noexcept {
-        u64 exp = Modulus - 2;
-        while (exp) {
-            if (exp % 2) {
-                *this *= rhs;
-            }
-            rhs *= rhs;
-            exp /= 2;
-        }
-        return *this;
-    }
-};
-
 
 
 //小数点12桁
@@ -826,9 +772,37 @@ using namespace atcoder;
 
 using mint = modint998244353;
 
-
-
 int main() {
-    
-    
+    ll n2;
+    cin>>n2;
+    string k=to_string(n2);
+    ll ks=k.size();
+    mint ans = 0;
+    rep(i,1,k.size()+1){
+        ll a,l,n;
+        if(i==k.size()){
+            string sm="1"+string(i-1,'0');
+            a=stoll(sm);
+            l=n2;
+            n=(l-a+1);
+            a=1;
+            l=(a+n-1);
+            ans += (mint)(a+l)*n/2;
+        }
+        else{
+            string sm="1"+string(i-1,'0');
+            string bi=string(i,'9');
+            a=stoll(sm);
+            l=stoll(bi);
+            n=(l-a+1);
+            a=1;
+            l=(a+n-1);
+            ans += (mint)(a+l)*n/2;
+        }
+    }
+
+    cout<<ans.val()<<endl;
+
+
+
 }

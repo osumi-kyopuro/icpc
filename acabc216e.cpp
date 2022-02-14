@@ -826,9 +826,30 @@ using namespace atcoder;
 
 using mint = modint998244353;
 
-
-
 int main() {
-    
-    
+    ll n,k;
+    cin>>n>>k;
+    vector<ll>a(n+1);
+    rep(i,0,n){
+        cin>>a[i];
+    }
+    sort(rall(a));
+    ll ans=0;
+    rep(i,0,n){
+        ll diff=(a[i]-a[i+1]);
+        ll cnt=diff*(i+1);
+        if(k>=cnt){
+            k-=cnt;
+            ans+=(a[i+1]+1+a[i])*diff/2ll*(i+1);
+        }
+        else{
+            ll p=k/(i+1);
+            ll m=k%(i+1);
+            ans+=(a[i]-p+1+a[i])*p/2ll*(i+1);
+            ans+=(a[i]-p)*m;
+            break;
+        }
+    }
+    cout<<ans<<endl;
+
 }

@@ -829,6 +829,40 @@ using mint = modint998244353;
 
 
 int main() {
-    
+    ll n,cnt=0;
+    cin>>n;
+    ll p=1,p2=1;
+    ll a,b,c;
+    bool flag=false;
+    rep(i,0,61){
+        ll k=(1ll<<i);
+        if(k==n){
+            p=k/2;
+            p2=k;
+            break;
+        }
+        else if(k>n){
+            p=k/2;
+            p2=k;
+            if(3*p/2>=n){
+                a=p/2;
+                b=3*a-n;
+                c=a-b;
+                flag=true;
+            }
+            break;
+        }
+    }
+    mint ans=1;
+    if(flag){
+        ans *= mint(3).pow(a-b);
+        ans *= mint(2).pow(b);
+        cout<<ans.val()<<endl;
+    }
+    else{
+        ans *= mint(3).pow(p2-n);
+        ans *= mint(2).pow(p-((p2-n)*2));
+        cout<<ans.val()<<endl;
+    }
     
 }
