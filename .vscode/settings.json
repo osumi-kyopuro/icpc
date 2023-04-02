@@ -52,7 +52,11 @@
         "xstddef": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "array": "cpp"
     },
-    "java.home": "C:/Program Files/Java/jdk-14.0.1/bin"
+    "java.home": "C:/Program Files/Java/jdk-14.0.1/bin",
+    "C_Cpp.errorSquiggles": "Disabled"
 }

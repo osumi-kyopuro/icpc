@@ -37,7 +37,7 @@ class ParseError {};
 #define B vector<bool>
 #define endl '\n'
 const ll MAX = 510000;
-const ll MOD =998244353;
+const ll MOD =1e+9+7;
 using graph = vector<vector<ll>>;
 int term(State &begin);
 int number(State &begin);
@@ -362,60 +362,6 @@ __int128 parse(string &s) {
   return ret;
 }
 
-
-//10の9乗+7でmodをとる
-template <std::uint_fast64_t Modulus> class modint {
-  using u64 = std::uint_fast64_t;
-
-public:
-  u64 a;
-
-    constexpr modint(const u64 x = 0) noexcept : a(x % Modulus) {}
-    constexpr u64 &value() noexcept { return a; }
-    constexpr const u64 &value() const noexcept { return a; }
-
-    constexpr modint operator+(const modint rhs) const noexcept {
-        return modint(*this) += rhs;
-    }
-    constexpr modint operator-(const modint rhs) const noexcept {
-        return modint(*this) -= rhs;
-    }
-    constexpr modint operator*(const modint rhs) const noexcept {
-        return modint(*this) *= rhs;
-    }
-    constexpr modint operator/(const modint rhs) const noexcept {
-        return modint(*this) /= rhs;
-    }
-    constexpr modint &operator+=(const modint rhs) noexcept {
-        a += rhs.a;
-        if (a >= Modulus) {
-        a -= Modulus;
-        }
-        return *this;
-    }
-    constexpr modint &operator-=(const modint rhs) noexcept {
-        if (a < rhs.a) {
-            a += Modulus;
-        }
-        a -= rhs.a;
-        return *this;
-    }
-    constexpr modint &operator*=(const modint rhs) noexcept {
-        a = a * rhs.a % Modulus;
-        return *this;
-    }
-    constexpr modint &operator/=(modint rhs) noexcept {
-        u64 exp = Modulus - 2;
-        while (exp) {
-            if (exp % 2) {
-                *this *= rhs;
-            }
-            rhs *= rhs;
-            exp /= 2;
-        }
-        return *this;
-    }
-};
 
 
 
@@ -760,37 +706,37 @@ string long_to_string(long long N,long long k) {
 using namespace atcoder;
 
 using mint = modint1000000007;
+//using namespace modint;
+//using mint = modint;
 
 
 
 
 const long double EPS=1e-14;
-
-
+#define PI 3.14159265359
 
 
 int main() {
-    string s;
-    cin>>s;
-    ll k;
-    cin>>k;
-    ll n=s.size();
-    vector<ll>cnt(n+1,0);
+    ll n,kn;
+    cin>>n>>kn;
+    vector<ll>a(n);
     rep(i,0,n){
-        if(s[i]=='.'){
-            cnt[i+1]=cnt[i]+1;
+        cin>>a[i];
+    }
+    vector<vector<mint>>dp(n+1,vector<mint>(kn+1));
+    vector<mint>sum(kn+2);
+    dp[0][0]=1;
+    rep(i,0,n){
+        rep(j,0,kn+1){
+            sum[j+1]+=sum[j]+dp[i][j];
         }
-        else{
-            cnt[i+1]=cnt[i];
+        rep(j,0,kn+1){
+            dp[i+1][j]+=sum[j+1]-sum[max(j-a[i],0ll)];
+        }
+        rep(j,0,kn+2){
+            sum[j]=0;
         }
     }
-    ll ans=0;
-    ll r=0;
-    rep(l,0,n){
-        for(;r<n&&cnt[r+1]-cnt[l]<=k;r++){}
-        chmax(ans,r-l);
-    }
-    cout<<ans<<endl;
-
+    cout<<dp[n][kn].val()<<endl;
 
 }

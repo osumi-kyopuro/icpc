@@ -21,6 +21,8 @@
 #include <iterator>
 #include <bits/stdc++.h>
 #include <cctype>
+#include <atcoder/all>
+#include <random>
 using namespace std;
 typedef string::const_iterator State;
 class ParseError {};
@@ -36,7 +38,7 @@ class ParseError {};
 #define B vector<bool>
 #define endl '\n'
 const ll MAX = 510000;
-const ll MOD =998244353;
+const ll MOD =1e+9+7;
 using graph = vector<vector<ll>>;
 int term(State &begin);
 int number(State &begin);
@@ -362,60 +364,6 @@ __int128 parse(string &s) {
 }
 
 
-//10の9乗+7でmodをとる
-template <std::uint_fast64_t Modulus> class modint {
-  using u64 = std::uint_fast64_t;
-
-public:
-  u64 a;
-
-    constexpr modint(const u64 x = 0) noexcept : a(x % Modulus) {}
-    constexpr u64 &value() noexcept { return a; }
-    constexpr const u64 &value() const noexcept { return a; }
-
-    constexpr modint operator+(const modint rhs) const noexcept {
-        return modint(*this) += rhs;
-    }
-    constexpr modint operator-(const modint rhs) const noexcept {
-        return modint(*this) -= rhs;
-    }
-    constexpr modint operator*(const modint rhs) const noexcept {
-        return modint(*this) *= rhs;
-    }
-    constexpr modint operator/(const modint rhs) const noexcept {
-        return modint(*this) /= rhs;
-    }
-    constexpr modint &operator+=(const modint rhs) noexcept {
-        a += rhs.a;
-        if (a >= Modulus) {
-        a -= Modulus;
-        }
-        return *this;
-    }
-    constexpr modint &operator-=(const modint rhs) noexcept {
-        if (a < rhs.a) {
-            a += Modulus;
-        }
-        a -= rhs.a;
-        return *this;
-    }
-    constexpr modint &operator*=(const modint rhs) noexcept {
-        a = a * rhs.a % Modulus;
-        return *this;
-    }
-    constexpr modint &operator/=(modint rhs) noexcept {
-        u64 exp = Modulus - 2;
-        while (exp) {
-            if (exp % 2) {
-                *this *= rhs;
-            }
-            rhs *= rhs;
-            exp /= 2;
-        }
-        return *this;
-    }
-};
-
 
 
 //小数点12桁
@@ -709,13 +657,13 @@ private:
 
 
 // グラフ、頂点の入次数、頂点数を受け取り、そのトポロジカルソートを記録した配列を返す関数
-vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int V2) {
+vector<ll> topological_sort(vector<vector<ll>> &G2, vector<ll> &indegree, ll V2) {
     // トポロジカルソートを記録する配列
-    vector<int> sorted_vertices;
+    vector<ll> sorted_vertices;
 
     // 入次数が0の頂点を発見したら、処理待ち頂点としてキューに追加する
-    queue<int> que;
-    for (int i = 0; i < V2; i++) {
+    queue<ll> que;
+    for (ll i = 0; i < V2; i++) {
         if (indegree[i] == 0) {
             que.push(i);
         }
@@ -724,12 +672,12 @@ vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int
     // キューが空になるまで、操作1~3を繰り返す
     while (que.empty() == false) {
         // キューの先頭の頂点を取り出す
-        int v = que.front();
+        ll v = que.front();
         que.pop();
 
         // その頂点と隣接している頂点の入次数を減らし、0になればキューに追加
-        for (int i = 0; i < G2[v].size(); i++) {
-            int u = G2[v][i];
+        for (ll i = 0; i < G2[v].size(); i++) {
+            ll u = G2[v][i];
             indegree[u] -= 1;
             if (indegree[u] == 0) que.push(u);
         }
@@ -741,74 +689,9 @@ vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int
     return sorted_vertices;
 }
 
-// 四則演算の式をパースして、その評価結果を返す。
-int expression(State &begin) {
-    int ret=term(begin);
-    while(true){
-        if(*begin == '+'){
-            begin++;
-            ret+=term(begin);
-        }
-        else if(*begin == '-'){
-            begin++;
-            ret-=term(begin);
-        }
-        else{
-            break;
-        }
-    }
-    cout<<"expr"<<ret<<endl;
-    return ret;
-}
 
-// 乗算除算の式をパースして、その評価結果を返す。
-int term(State &begin) {
-    int p=factor(begin);
-    while(true){
-        if(*begin == '*'){
-            begin++;
-            p*=factor(begin);
-        }
-        else if(*begin == '/'){
-            begin++;
-            p/=factor(begin);
-        }
-        else{
-            break;
-        }
-    }
-    cout<<"term"<<p<<endl;
-    return p;
-}
 
-int factor(State &begin){
-    if(*begin == '('){
-        begin++;
-        int t = expression(begin);
-        begin++;
-        cout<<"fact"<<t<<endl;
-        return t;
-    }else{
-        int ret=number(begin);
-        cout<<"fact"<<ret<<endl;
-        return ret;
-    }
-}
-
-// 数字の列をパースして、その数を返す。
-int number(State &begin) {
-    int ret = 0;
-
-    while (isdigit(*begin)) {
-        ret *= 10;
-        ret += *begin - '0';
-        begin++;
-    }
-    cout<<"num"<<ret<<endl;
-    return ret;
-}
-
-string long_to_base(long long N,long long k) {
+string long_to_string(long long N,long long k) {
 	if (N == 0) {
 		return "0";
 	}
@@ -820,37 +703,62 @@ string long_to_base(long long N,long long k) {
 	return res;
 }
 
+// 1 以上 N 以下の整数が素数かどうかを返す
+vector<bool> Eratosthenes(ll N) {
+    // テーブル
+    vector<bool> isprime(N+1, true);
+
+    // 1 は予めふるい落としておく
+    isprime[1] = false;
+
+    // ふるい
+    for (ll p = 2; p <= N; ++p) {
+        // すでに合成数であるものはスキップする
+        if (!isprime[p]) continue;
+
+        // p 以外の p の倍数から素数ラベルを剥奪
+        for (ll q = p * 2; q <= N; q += p) {
+            isprime[q] = false;
+        }
+    }
+
+    // 1 以上 N 以下の整数が素数かどうか
+    return isprime;
+}
+
+
+using namespace atcoder;
+
+using mint = modint1000000007;
+//using namespace modint;
+//using mint = modint;
+
+
+
+const long double EPS=1e-14;
+#define PI 3.14159265359
 
 
 int main() {
     ll n;
     cin>>n;
-    map<ll,ll>mp;
+    vector<P>d;
     rep(i,0,n){
         ll a,b;
         cin>>a>>b;
-        mp[a]++;
-        mp[a+b]--;
+        d.push_back({a,1});
+        d.push_back({a+b,-1});
     }
-    ll time=0,lp=0;
+    sort(all(d));
     vector<ll>ans(n+1,0);
-    for(auto &x:mp){
-        ans[lp]+=(x.first-time);
-        lp+=x.second;
-        time=x.first;
+    ll cnt=0;
+    rep(i,0,d.size()-1){
+        cnt+=d[i].second;
+        ans[cnt]+=(d[i+1].first-d[i].first);
     }
     rep(i,1,ans.size()){
         cout<<ans[i]<<" ";
     }
     cout<<endl;
-
-
-
-
-
-
-    
-
-
 
 }

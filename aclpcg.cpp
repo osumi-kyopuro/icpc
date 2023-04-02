@@ -759,7 +759,7 @@ string long_to_string(long long N,long long k) {
 
 using namespace atcoder;
 
-using mint = modint1000000007;
+using mint = modint998244353;
 
 
 
@@ -770,27 +770,24 @@ const long double EPS=1e-14;
 
 
 int main() {
-    string s;
-    cin>>s;
-    ll k;
-    cin>>k;
-    ll n=s.size();
-    vector<ll>cnt(n+1,0);
-    rep(i,0,n){
-        if(s[i]=='.'){
-            cnt[i+1]=cnt[i]+1;
-        }
-        else{
-            cnt[i+1]=cnt[i];
-        }
-    }
-    ll ans=0;
-    ll r=0;
-    rep(l,0,n){
-        for(;r<n&&cnt[r+1]-cnt[l]<=k;r++){}
-        chmax(ans,r-l);
-    }
-    cout<<ans<<endl;
+    ll n,m;
+    cin>>n>>m;
+    scc_graph g(n);
 
+    rep(i,0,m){
+        ll u,v;
+        cin>>u>>v;
+        g.add_edge(u,v);
+    }
 
+    auto scc=g.scc();
+    cout<<scc.size()<<endl;
+    for(auto &v :scc){
+        cout<<v.size();
+        for(auto &x:v){
+            cout<<" "<<x;
+        }
+        cout<<endl;
+    }
+    
 }

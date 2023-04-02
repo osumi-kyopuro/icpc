@@ -20,6 +20,12 @@
 #include<string.h>
 #include <iterator>
 #include <bits/stdc++.h>
+#include <cctype>
+#include <atcoder/all>
+#include <random>
+using namespace std;
+typedef string::const_iterator State;
+class ParseError {};
 #define ll long long
 #define rep(i, s, n) for (ll i = (ll)(s); i < (ll)(n); i++)
 #define rrep(i, s, n) for (ll i = (ll)(s); i > (ll)(n); i--)
@@ -31,10 +37,22 @@
 #define C vector<char>
 #define B vector<bool>
 #define endl '\n'
+
+#ifdef OSUMI_DEBUG
+#include "./debug.hpp"
+#else
+#define printContainer(...)
+#endif
+
+
+
 const ll MAX = 510000;
-const ll MOD =998244353;
-using namespace std;
+const ll MOD =1e+9+7;
 using graph = vector<vector<ll>>;
+int term(State &begin);
+int number(State &begin);
+int expression(State &begin);
+int factor(State &begin);
 struct edge{
     //辺の重みを管理できるような構造体
 	//コンストラクタによって簡単に値を入れられるようにしている
@@ -75,7 +93,7 @@ vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph) {
 		if (d[v] < p.first) {
 			continue;
 		}
-		for (auto x : Graph[v]) {
+		for (auto& x : Graph[v]) {
 			if (d[x.to] > d[v] + x.cost) {
 				d[x.to] = d[v] + x.cost;
 				q.push({d[x.to], x.to});
@@ -354,72 +372,6 @@ __int128 parse(string &s) {
   return ret;
 }
 
-
-//10の9乗+7でmodをとる
-template <std::uint_fast64_t Modulus> class modint {
-  using u64 = std::uint_fast64_t;
-
-public:
-  u64 a;
-
-    constexpr modint(const u64 x = 0) noexcept : a(x % Modulus) {}
-    constexpr u64 &value() noexcept { return a; }
-    constexpr const u64 &value() const noexcept { return a; }
-
-    constexpr modint operator+(const modint rhs) const noexcept {
-        return modint(*this) += rhs;
-    }
-    constexpr modint operator-(const modint rhs) const noexcept {
-        return modint(*this) -= rhs;
-    }
-    constexpr modint operator*(const modint rhs) const noexcept {
-        return modint(*this) *= rhs;
-    }
-    constexpr modint operator/(const modint rhs) const noexcept {
-        return modint(*this) /= rhs;
-    }
-    constexpr modint &operator+=(const modint rhs) noexcept {
-        a += rhs.a;
-        if (a >= Modulus) {
-        a -= Modulus;
-        }
-        return *this;
-    }
-    constexpr modint &operator-=(const modint rhs) noexcept {
-        if (a < rhs.a) {
-            a += Modulus;
-        }
-        a -= rhs.a;
-        return *this;
-    }
-    constexpr modint &operator*=(const modint rhs) noexcept {
-        a = a * rhs.a % Modulus;
-        return *this;
-    }
-    constexpr modint &operator/=(modint rhs) noexcept {
-        u64 exp = Modulus - 2;
-        while (exp) {
-            if (exp % 2) {
-                *this *= rhs;
-            }
-            rhs *= rhs;
-            exp /= 2;
-        }
-        return *this;
-    }
-};
-
-
-
-//小数点12桁
-struct all_init
-{
-    all_init()
-    {
-        cout << fixed << setprecision(30);
-    }
-} All_init;
-
 //Bit
 // 1-indexedなので注意。
  struct BIT {
@@ -516,7 +468,7 @@ struct Zip{
             mp[a[i]]=0;    
         }
         ll size=0;
-        for(auto &x:mp){//&はコンテナの値変更可能
+        for(auto& x:mp){//&はコンテナの値変更可能
             x.second=size;
             size++;    
         }
@@ -558,7 +510,7 @@ long long modxx(long long val, long long m) {
 }
 
 /*二点間の距離*/
-long double dist(pair<long double, long double> a, pair<long double, long double> b)
+double dist(pair<double, double> a, pair<double, double> b)
 {
     return sqrt(pow((a.first - b.first), 2) + pow((a.second - b.second), 2));
 }
@@ -702,13 +654,13 @@ private:
 
 
 // グラフ、頂点の入次数、頂点数を受け取り、そのトポロジカルソートを記録した配列を返す関数
-vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int V2) {
+vector<ll> topological_sort(vector<vector<ll>> &G2, vector<ll> &indegree, ll V2) {
     // トポロジカルソートを記録する配列
-    vector<int> sorted_vertices;
+    vector<ll> sorted_vertices;
 
     // 入次数が0の頂点を発見したら、処理待ち頂点としてキューに追加する
-    queue<int> que;
-    for (int i = 0; i < V2; i++) {
+    queue<ll> que;
+    for (ll i = 0; i < V2; i++) {
         if (indegree[i] == 0) {
             que.push(i);
         }
@@ -717,12 +669,12 @@ vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int
     // キューが空になるまで、操作1~3を繰り返す
     while (que.empty() == false) {
         // キューの先頭の頂点を取り出す
-        int v = que.front();
+        ll v = que.front();
         que.pop();
 
         // その頂点と隣接している頂点の入次数を減らし、0になればキューに追加
-        for (int i = 0; i < G2[v].size(); i++) {
-            int u = G2[v][i];
+        for (ll i = 0; i < G2[v].size(); i++) {
+            ll u = G2[v][i];
             indegree[u] -= 1;
             if (indegree[u] == 0) que.push(u);
         }
@@ -735,33 +687,124 @@ vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int
 }
 
 
-int main() {
-    // 頂点数と辺の本数
-    int V2, E2;
-    cin >> V2 >> E2;
 
-    // 隣接リストにより表現されるグラフ
-    vector<vector<int>> G2(V2);
-    // 頂点の入次数を記録する配列
-    vector<int> indegree(V2);
-    for (int i = 0; i < E2; i++) {
-        int u, v;
-        cin >> u >> v;
-        G2[u].push_back(v);
-        indegree[v] += 1;
-    }
-
-    // トポロジカルソートする
-    vector<int> sorted_vertices = topological_sort(G2, indegree, V2);
-
-    // トポロジカルソートを出力
-    for (int i = 0; i < sorted_vertices.size(); i++) {
-        cout << sorted_vertices[i] << endl;
-    }
-
-    return 0;
-
+string long_to_string(long long N,long long k) {
+	if (N == 0) {
+		return "0";
+	}
+	string res;
+	while (N > 0) {
+		res = char(N % k + '0') + res;
+		N /= k;
+	}
+	return res;
 }
-   
 
-    
+// 1 以上 N 以下の整数が素数かどうかを返す
+vector<bool> Eratosthenes(ll N) {
+    // テーブル
+    vector<bool> isprime(N+1, true);
+
+    // 1 は予めふるい落としておく
+    isprime[1] = false;
+
+    // ふるい
+    for (ll p = 2; p <= N; ++p) {
+        // すでに合成数であるものはスキップする
+        if (!isprime[p]) continue;
+
+        // p 以外の p の倍数から素数ラベルを剥奪
+        for (ll q = p * 2; q <= N; q += p) {
+            isprime[q] = false;
+        }
+    }
+
+    // 1 以上 N 以下の整数が素数かどうか
+    return isprime;
+}
+
+
+using namespace atcoder;
+
+using mint = modint1000000007;
+//using mint = modint;
+
+
+//弧度法の角度から度数法へ
+double rad2deg(double rad){
+    return rad * (180 / M_PI);
+}
+
+
+
+
+const long double EPS=1e-14;
+#define PI 3.14159265359
+
+void printArray2(string name,vector<V>& a){
+    cout<<name<<endl;
+    rep(i,0,a.size()){
+        rep(j,0,a[i].size()){
+            cout<<a[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+}
+
+void printArray(string name,vector<ll>& a){
+    cout<<name<<endl;
+    rep(i,0,a.size()){
+        cout<<a[i]<<" ";
+    }
+    cout<<endl;
+    cout<<endl;
+}
+
+//小数点12桁
+struct all_init
+{
+    all_init()
+    {
+        cout << fixed << setprecision(12);
+    }
+} All_init;
+
+
+
+
+
+int main() {
+    ll n,q;
+    cin>>n>>q;
+    vector<ll>a(n);
+    vector<V>dp(31,V(n));
+    //dp[i][j]:=jにいて2^i回移動したときの位置
+    rep(i,0,n){
+        cin>>a[i];
+        a[i]--;
+        dp[0][i]=a[i];
+    }
+    rep(i,1,30){
+        rep(j,0,n){
+            dp[i][j]=dp[i-1][dp[i-1][j]];
+        }
+    }
+    vector<ll>ans;
+    rep(i,0,q){
+        ll x,y;
+        cin>>x>>y;
+        ll now=x;
+        now--;
+        rrep(j,29,-1){
+            if((y/(1<<j))%2!=0){
+                now=dp[j][now];
+            }
+        }
+        ans.push_back(now+1);
+    }
+
+    rep(i,0,q){
+        cout<<ans[i]<<endl;
+    }
+}

@@ -37,7 +37,7 @@ class ParseError {};
 #define B vector<bool>
 #define endl '\n'
 const ll MAX = 510000;
-const ll MOD =998244353;
+const ll MOD =1000000007;
 using graph = vector<vector<ll>>;
 int term(State &begin);
 int number(State &begin);
@@ -710,13 +710,13 @@ private:
 
 
 // グラフ、頂点の入次数、頂点数を受け取り、そのトポロジカルソートを記録した配列を返す関数
-vector<ll> topological_sort(vector<vector<ll>> &G2, vector<ll> &indegree, ll V2) {
+vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int V2) {
     // トポロジカルソートを記録する配列
-    vector<ll> sorted_vertices;
+    vector<int> sorted_vertices;
 
     // 入次数が0の頂点を発見したら、処理待ち頂点としてキューに追加する
-    queue<ll> que;
-    for (ll i = 0; i < V2; i++) {
+    queue<int> que;
+    for (int i = 0; i < V2; i++) {
         if (indegree[i] == 0) {
             que.push(i);
         }
@@ -725,12 +725,12 @@ vector<ll> topological_sort(vector<vector<ll>> &G2, vector<ll> &indegree, ll V2)
     // キューが空になるまで、操作1~3を繰り返す
     while (que.empty() == false) {
         // キューの先頭の頂点を取り出す
-        ll v = que.front();
+        int v = que.front();
         que.pop();
 
         // その頂点と隣接している頂点の入次数を減らし、0になればキューに追加
-        for (ll i = 0; i < G2[v].size(); i++) {
-            ll u = G2[v][i];
+        for (int i = 0; i < G2[v].size(); i++) {
+            int u = G2[v][i];
             indegree[u] -= 1;
             if (indegree[u] == 0) que.push(u);
         }
@@ -742,9 +742,74 @@ vector<ll> topological_sort(vector<vector<ll>> &G2, vector<ll> &indegree, ll V2)
     return sorted_vertices;
 }
 
+// 四則演算の式をパースして、その評価結果を返す。
+int expression(State &begin) {
+    int ret=term(begin);
+    while(true){
+        if(*begin == '+'){
+            begin++;
+            ret+=term(begin);
+        }
+        else if(*begin == '-'){
+            begin++;
+            ret-=term(begin);
+        }
+        else{
+            break;
+        }
+    }
+    cout<<"expr"<<ret<<endl;
+    return ret;
+}
 
+// 乗算除算の式をパースして、その評価結果を返す。
+int term(State &begin) {
+    int p=factor(begin);
+    while(true){
+        if(*begin == '*'){
+            begin++;
+            p*=factor(begin);
+        }
+        else if(*begin == '/'){
+            begin++;
+            p/=factor(begin);
+        }
+        else{
+            break;
+        }
+    }
+    cout<<"term"<<p<<endl;
+    return p;
+}
 
-string long_to_string(long long N,long long k) {
+int factor(State &begin){
+    if(*begin == '('){
+        begin++;
+        int t = expression(begin);
+        begin++;
+        cout<<"fact"<<t<<endl;
+        return t;
+    }else{
+        int ret=number(begin);
+        cout<<"fact"<<ret<<endl;
+        return ret;
+    }
+}
+
+// 数字の列をパースして、その数を返す。
+int number(State &begin) {
+    int ret = 0;
+
+    while (isdigit(*begin)) {
+        ret *= 10;
+        ret += *begin - '0';
+        begin++;
+    }
+    cout<<"num"<<ret<<endl;
+    return ret;
+}
+
+string long_to_base(long long N,long long k) {
 	if (N == 0) {
 		return "0";
 	}
@@ -764,33 +829,64 @@ using mint = modint1000000007;
 
 
 
-const long double EPS=1e-14;
-
-
-
 
 int main() {
-    string s;
-    cin>>s;
-    ll k;
-    cin>>k;
-    ll n=s.size();
-    vector<ll>cnt(n+1,0);
-    rep(i,0,n){
-        if(s[i]=='.'){
-            cnt[i+1]=cnt[i]+1;
+    ll q;
+    cin>>q;
+    multiset<ll>mst;
+    vector<ll>ans;
+    rep(i,0,q){
+        ll op,x,k;
+        bool flag=true;
+        cin>>op;
+        if(op==1){
+            cin>>x;
+            mst.insert(x);
+        }
+        else if(op==2){
+            cin>>x>>k;
+            auto it=mst.upper_bound(x);
+            rep(j,0,k){
+                if(it==mst.begin()){
+                    flag=false;
+                    break;
+                }
+                else{
+                    it--;
+                }
+            }
+            if(flag){
+                ans.push_back(*it);
+            }
+            else{
+                ans.push_back(-1);
+            }
         }
         else{
-            cnt[i+1]=cnt[i];
+            cin>>x>>k;
+            auto it=mst.lower_bound(x);
+            rep(j,0,k-1){
+                if(it==mst.end()){
+                    flag=false;
+                    break;
+                }
+                else{
+                    it++;
+                }
+            }
+            if(it==mst.end()){
+                flag=false;
+            }
+            if(flag){
+                ans.push_back(*it);
+            }
+            else{
+                ans.push_back(-1);
+            }
         }
     }
-    ll ans=0;
-    ll r=0;
-    rep(l,0,n){
-        for(;r<n&&cnt[r+1]-cnt[l]<=k;r++){}
-        chmax(ans,r-l);
+    rep(i,0,ans.size()){
+        cout<<ans[i]<<endl;
     }
-    cout<<ans<<endl;
-
-
+    
 }

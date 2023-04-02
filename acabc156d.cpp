@@ -195,6 +195,8 @@ struct all_init
     }
 } All_init;
 
+
+
 int main()
 {
     //cominit();

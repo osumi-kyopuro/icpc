@@ -826,43 +826,23 @@ using namespace atcoder;
 
 using mint = modint998244353;
 
+map<ll,mint>mp;
+mint dfs(ll x){
+    if(x<=4){
+        return x;
+    }
+    else if(mp.count(x)==1){
+        return mp[x]; 
+    }
+    else{
+        return mp[x]= dfs(x/2) * dfs((x+2-1)/2);
+    }
+}
+
 
 
 int main() {
-    ll n,cnt=0;
+    ll n;
     cin>>n;
-    ll p=1,p2=1;
-    ll a,b,c;
-    bool flag=false;
-    rep(i,0,61){
-        ll k=(1ll<<i);
-        if(k==n){
-            p=k/2;
-            p2=k;
-            break;
-        }
-        else if(k>n){
-            p=k/2;
-            p2=k;
-            if(3*p/2>=n){
-                a=p/2;
-                b=3*a-n;
-                c=a-b;
-                flag=true;
-            }
-            break;
-        }
-    }
-    mint ans=1;
-    if(flag){
-        ans *= mint(3).pow(a-b);
-        ans *= mint(2).pow(b);
-        cout<<ans.val()<<endl;
-    }
-    else{
-        ans *= mint(3).pow(p2-n);
-        ans *= mint(2).pow(p-((p2-n)*2));
-        cout<<ans.val()<<endl;
-    }
-    
+    cout<<dfs(n).val()<<endl;
 }

@@ -22,6 +22,7 @@
 #include <bits/stdc++.h>
 #include <cctype>
 #include <atcoder/all>
+#include <random>
 using namespace std;
 typedef string::const_iterator State;
 class ParseError {};
@@ -37,7 +38,7 @@ class ParseError {};
 #define B vector<bool>
 #define endl '\n'
 const ll MAX = 510000;
-const ll MOD =998244353;
+const ll MOD =1e+9+7;
 using graph = vector<vector<ll>>;
 int term(State &begin);
 int number(State &begin);
@@ -363,60 +364,6 @@ __int128 parse(string &s) {
 }
 
 
-//10の9乗+7でmodをとる
-template <std::uint_fast64_t Modulus> class modint {
-  using u64 = std::uint_fast64_t;
-
-public:
-  u64 a;
-
-    constexpr modint(const u64 x = 0) noexcept : a(x % Modulus) {}
-    constexpr u64 &value() noexcept { return a; }
-    constexpr const u64 &value() const noexcept { return a; }
-
-    constexpr modint operator+(const modint rhs) const noexcept {
-        return modint(*this) += rhs;
-    }
-    constexpr modint operator-(const modint rhs) const noexcept {
-        return modint(*this) -= rhs;
-    }
-    constexpr modint operator*(const modint rhs) const noexcept {
-        return modint(*this) *= rhs;
-    }
-    constexpr modint operator/(const modint rhs) const noexcept {
-        return modint(*this) /= rhs;
-    }
-    constexpr modint &operator+=(const modint rhs) noexcept {
-        a += rhs.a;
-        if (a >= Modulus) {
-        a -= Modulus;
-        }
-        return *this;
-    }
-    constexpr modint &operator-=(const modint rhs) noexcept {
-        if (a < rhs.a) {
-            a += Modulus;
-        }
-        a -= rhs.a;
-        return *this;
-    }
-    constexpr modint &operator*=(const modint rhs) noexcept {
-        a = a * rhs.a % Modulus;
-        return *this;
-    }
-    constexpr modint &operator/=(modint rhs) noexcept {
-        u64 exp = Modulus - 2;
-        while (exp) {
-            if (exp % 2) {
-                *this *= rhs;
-            }
-            rhs *= rhs;
-            exp /= 2;
-        }
-        return *this;
-    }
-};
-
 
 
 //小数点12桁
@@ -566,7 +513,7 @@ long long modxx(long long val, long long m) {
 }
 
 /*二点間の距離*/
-long double dist(pair<long double, long double> a, pair<long double, long double> b)
+double dist(pair<double, double> a, pair<double, double> b)
 {
     return sqrt(pow((a.first - b.first), 2) + pow((a.second - b.second), 2));
 }
@@ -756,41 +703,102 @@ string long_to_string(long long N,long long k) {
 	return res;
 }
 
+// 1 以上 N 以下の整数が素数かどうかを返す
+vector<bool> Eratosthenes(ll N) {
+    // テーブル
+    vector<bool> isprime(N+1, true);
+
+    // 1 は予めふるい落としておく
+    isprime[1] = false;
+
+    // ふるい
+    for (ll p = 2; p <= N; ++p) {
+        // すでに合成数であるものはスキップする
+        if (!isprime[p]) continue;
+
+        // p 以外の p の倍数から素数ラベルを剥奪
+        for (ll q = p * 2; q <= N; q += p) {
+            isprime[q] = false;
+        }
+    }
+
+    // 1 以上 N 以下の整数が素数かどうか
+    return isprime;
+}
+
 
 using namespace atcoder;
 
-using mint = modint1000000007;
+//using mint = modint1000000007;
+//using namespace modint;
+using mint = modint;
+
+
+//弧度法の角度から度数法へ
+double rad2deg(double rad){
+    return rad * (180 / M_PI);
+}
 
 
 
 
 const long double EPS=1e-14;
+#define PI 3.14159265359
 
+void printArray2(string name,vector<V>& a){
+    cout<<name<<endl;
+    rep(i,0,a.size()){
+        rep(j,0,a[i].size()){
+            cout<<a[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+}
+
+void printArray(string name,vector<ll>& a){
+    cout<<name<<endl;
+    rep(i,0,a.size()){
+        cout<<a[i]<<" ";
+    }
+    cout<<endl;
+    cout<<endl;
+}
 
 
 
 int main() {
-    string s;
-    cin>>s;
-    ll k;
-    cin>>k;
-    ll n=s.size();
-    vector<ll>cnt(n+1,0);
+    ll h,w,n;
+    cin>>h>>w>>n;
+    vector<V>imo(h+5,V(w+5,0));
     rep(i,0,n){
-        if(s[i]=='.'){
-            cnt[i+1]=cnt[i]+1;
-        }
-        else{
-            cnt[i+1]=cnt[i];
+        ll a,b,c,d;
+        cin>>a>>b>>c>>d;
+        imo[a][b]++;
+        imo[a][d+1]--;
+        imo[c+1][b]--;
+        imo[c+1][d+1]++;
+    }
+
+    rep(i,0,h+2){
+        rep(j,0,w+2){
+            imo[i][j+1]+=imo[i][j];
         }
     }
-    ll ans=0;
-    ll r=0;
-    rep(l,0,n){
-        for(;r<n&&cnt[r+1]-cnt[l]<=k;r++){}
-        chmax(ans,r-l);
+
+    rep(j,0,w+2){
+        rep(i,0,h+2){
+            imo[i+1][j]+=imo[i][j];
+        }
     }
-    cout<<ans<<endl;
+
+    rep(i,1,h+1){
+        rep(j,1,w+1){
+            cout<<imo[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+
 
 
 }

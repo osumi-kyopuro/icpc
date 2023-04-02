@@ -21,10 +21,13 @@
 #include <iterator>
 #include <bits/stdc++.h>
 #include <cctype>
+#include <atcoder/all>
+#include <random>
 using namespace std;
 typedef string::const_iterator State;
 class ParseError {};
-#define ll long long
+//#define ll long long
+using ll=long long;
 #define rep(i, s, n) for (ll i = (ll)(s); i < (ll)(n); i++)
 #define rrep(i, s, n) for (ll i = (ll)(s); i > (ll)(n); i--)
 #define all(a) (a).begin(), (a).end()
@@ -35,8 +38,17 @@ class ParseError {};
 #define C vector<char>
 #define B vector<bool>
 #define endl '\n'
+
+#ifdef OSUMI_DEBUG
+#include "./debug.hpp"
+#else
+#define printContainer(...)
+#endif
+
+
+
 const ll MAX = 510000;
-const ll MOD =998244353;
+const ll MOD =1e+9+7;
 using graph = vector<vector<ll>>;
 int term(State &begin);
 int number(State &begin);
@@ -82,7 +94,7 @@ vector<ll> Dijkstra(ll i, vector<vector<edge>> Graph) {
 		if (d[v] < p.first) {
 			continue;
 		}
-		for (auto x : Graph[v]) {
+		for (auto& x : Graph[v]) {
 			if (d[x.to] > d[v] + x.cost) {
 				d[x.to] = d[v] + x.cost;
 				q.push({d[x.to], x.to});
@@ -140,11 +152,11 @@ ll com(ll n, ll k)
 ll com2(ll n,ll k){
     ll res,bs=1,bb=1;
     for(ll i=0;i<k;i++){
-        bs=(bs*(n-i))%mod;
-        bb=(bb*(i+1))%mod;
+        bs=(bs*(n-i))%MOD;
+        bb=(bb*(i+1))%MOD;
     }
-    res=modinv(bb,mod)%mod;
-    res=(res*bs)%mod;
+    res=modinv(bb,MOD)%MOD;
+    res=(res*bs)%MOD;
     return res;
 }
 
@@ -229,7 +241,7 @@ double median(V a){//中央値
 struct UnionFind
 {
     vector<ll> par;
-    ll forest;
+    ll forest;//連結成分の個数
 
     UnionFind(ll n) : par(n, -1) {forest=n;}
 
@@ -261,7 +273,7 @@ struct UnionFind
         par[y] = x;
         return true;
     }
-    ll size(ll x)
+    ll size(ll x)//頂点Xの属する連結成分のサイズ
     {
         return -par[root(x)];
     }
@@ -362,160 +374,6 @@ __int128 parse(string &s) {
 }
 
 
-//10の9乗+7でmodをとる
-template <std::uint_fast64_t Modulus> class modint {
-  using u64 = std::uint_fast64_t;
-
-public:
-  u64 a;
-
-    constexpr modint(const u64 x = 0) noexcept : a(x % Modulus) {}
-    constexpr u64 &value() noexcept { return a; }
-    constexpr const u64 &value() const noexcept { return a; }
-
-    constexpr modint operator+(const modint rhs) const noexcept {
-        return modint(*this) += rhs;
-    }
-    constexpr modint operator-(const modint rhs) const noexcept {
-        return modint(*this) -= rhs;
-    }
-    constexpr modint operator*(const modint rhs) const noexcept {
-        return modint(*this) *= rhs;
-    }
-    constexpr modint operator/(const modint rhs) const noexcept {
-        return modint(*this) /= rhs;
-    }
-    constexpr modint &operator+=(const modint rhs) noexcept {
-        a += rhs.a;
-        if (a >= Modulus) {
-        a -= Modulus;
-        }
-        return *this;
-    }
-    constexpr modint &operator-=(const modint rhs) noexcept {
-        if (a < rhs.a) {
-            a += Modulus;
-        }
-        a -= rhs.a;
-        return *this;
-    }
-    constexpr modint &operator*=(const modint rhs) noexcept {
-        a = a * rhs.a % Modulus;
-        return *this;
-    }
-    constexpr modint &operator/=(modint rhs) noexcept {
-        u64 exp = Modulus - 2;
-        while (exp) {
-            if (exp % 2) {
-                *this *= rhs;
-            }
-            rhs *= rhs;
-            exp /= 2;
-        }
-        return *this;
-    }
-};
-
-
-
-//小数点12桁
-struct all_init
-{
-    all_init()
-    {
-        cout << fixed << setprecision(30);
-    }
-} All_init;
-
-//Bit
-// 1-indexedなので注意。
- struct BIT {
-  private:
-   vector<int> bit;
-   int N;
- 
-  public:
-   BIT(int size) {
-     N = size;
-     bit.resize(N + 1);
-   }
- 
-   // 一点更新です
-   void add(int a, int w) {
-     for (int x = a; x <= N; x += x & -x) bit[x] += w;
-   }
- 
-   // 1~Nまでの和を求める。
-   int sum(int a) {
-     int ret = 0;
-     for (int x = a; x > 0; x -= x & -x) ret += bit[x];
-     return ret;
-   }
- };
-
-
-
-
-
-/* SegTree<X>(n,fx): モノイド(集合X, 二項演算fx)についてサイズnで構築
-    set(int i, X x), build(): i番目の要素をxにセット。まとめてセグ木を構築する。O(n)
-    update(i,x): i 番目の要素を x に更新。O(log(n))
-    query(a,b):  [a,b) 全てにfxを作用させた値を取得。O(log(n))
-*/
-template <typename X>
-struct SegTree {
-    using FX = function<X(X, X)>;
-    int n;
-    FX fx;
-    vector<X> dat;
-    SegTree(int n_, FX fx_): n(), fx(fx_),dat(n_ * 4) {
-        int x = 1;
-        while (n_ > x) {
-            x *= 2;
-        }
-        n = x;
-    }
- 
-    void set(int i, X x) { dat[i + n - 1] = x; }
-    void build() {
-        for (int k = n - 2; k >= 0; k--) dat[k] = min(dat[2 * k + 1], dat[2 * k + 2]);
-    }
- 
-    void update(int i, X x) {
-        i += n - 1;
-        dat[i] = x;
-        while (i > 0) {
-            i = (i - 1) / 2;  // parent
-            dat[i] = fx(dat[i * 2 + 1], dat[i * 2 + 2]);
-        }
-    }
- 
-    // the minimum element of [a,b)
-    X query(int a, int b) { return query_sub(a, b, 0, 0, n); }
-    X query_sub(int a, int b, int k, int l, int r) {
-        if (r <= a || b <= l) {
-            return pow(2,31);
-        } else if (a <= l && r <= b) {
-            return dat[k];
-        } else {
-            X vl = query_sub(a, b, k * 2 + 1, l, (l + r) / 2);
-            X vr = query_sub(a, b, k * 2 + 2, (l + r) / 2, r);
-            return fx(vl, vr);
-        }
-    }
-    /* debug */
-
-    inline X operator[](int a) { return query(a, a + 1); }
-    void print() {
-        for (int i = 0; i < n; ++i) {
-            cout << (*this)[i];
-            if (i != n) cout << ",";
-        }
-        cout << endl;
-    }
-};
-
-
 struct Zip{
     map<ll,ll>mp;
     Zip(vector<ll>a){
@@ -523,7 +381,7 @@ struct Zip{
             mp[a[i]]=0;    
         }
         ll size=0;
-        for(auto &x:mp){//&はコンテナの値変更可能
+        for(auto& x:mp){//&はコンテナの値変更可能
             x.second=size;
             size++;    
         }
@@ -565,7 +423,7 @@ long long modxx(long long val, long long m) {
 }
 
 /*二点間の距離*/
-long double dist(pair<long double, long double> a, pair<long double, long double> b)
+double dist(pair<double, double> a, pair<double, double> b)
 {
     return sqrt(pow((a.first - b.first), 2) + pow((a.second - b.second), 2));
 }
@@ -709,13 +567,13 @@ private:
 
 
 // グラフ、頂点の入次数、頂点数を受け取り、そのトポロジカルソートを記録した配列を返す関数
-vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int V2) {
+vector<ll> topological_sort(vector<vector<ll>> &G2, vector<ll> &indegree, ll V2) {
     // トポロジカルソートを記録する配列
-    vector<int> sorted_vertices;
+    vector<ll> sorted_vertices;
 
     // 入次数が0の頂点を発見したら、処理待ち頂点としてキューに追加する
-    queue<int> que;
-    for (int i = 0; i < V2; i++) {
+    queue<ll> que;
+    for (ll i = 0; i < V2; i++) {
         if (indegree[i] == 0) {
             que.push(i);
         }
@@ -724,12 +582,12 @@ vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int
     // キューが空になるまで、操作1~3を繰り返す
     while (que.empty() == false) {
         // キューの先頭の頂点を取り出す
-        int v = que.front();
+        ll v = que.front();
         que.pop();
 
         // その頂点と隣接している頂点の入次数を減らし、0になればキューに追加
-        for (int i = 0; i < G2[v].size(); i++) {
-            int u = G2[v][i];
+        for (ll i = 0; i < G2[v].size(); i++) {
+            ll u = G2[v][i];
             indegree[u] -= 1;
             if (indegree[u] == 0) que.push(u);
         }
@@ -741,121 +599,189 @@ vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int
     return sorted_vertices;
 }
 
-// 四則演算の式をパースして、その評価結果を返す。
-int expression(State &begin) {
-    int ret=term(begin);
-    while(true){
-        if(*begin == '+'){
-            begin++;
-            ret+=term(begin);
-        }
-        else if(*begin == '-'){
-            begin++;
-            ret-=term(begin);
-        }
-        else{
-            break;
-        }
-    }
-    cout<<"expr"<<ret<<endl;
-    return ret;
+
+
+string long_to_string(long long N,long long k) {
+	if (N == 0) {
+		return "0";
+	}
+	string res;
+	while (N > 0) {
+		res = char(N % k + '0') + res;
+		N /= k;
+	}
+	return res;
 }
 
-// 乗算除算の式をパースして、その評価結果を返す。
-int term(State &begin) {
-    int p=factor(begin);
-    while(true){
-        if(*begin == '*'){
-            begin++;
-            p*=factor(begin);
-        }
-        else if(*begin == '/'){
-            begin++;
-            p/=factor(begin);
-        }
-        else{
-            break;
+// 1 以上 N 以下の整数が素数かどうかを返す
+vector<bool> Eratosthenes(ll N) {
+    // テーブル
+    vector<bool> isprime(N+1, true);
+
+    // 1 は予めふるい落としておく
+    isprime[1] = false;
+
+    // ふるい
+    for (ll p = 2; p <= N; ++p) {
+        // すでに合成数であるものはスキップする
+        if (!isprime[p]) continue;
+
+        // p 以外の p の倍数から素数ラベルを剥奪
+        for (ll q = p * 2; q <= N; q += p) {
+            isprime[q] = false;
         }
     }
-    cout<<"term"<<p<<endl;
-    return p;
+
+    // 1 以上 N 以下の整数が素数かどうか
+    return isprime;
 }
 
-int factor(State &begin){
-    if(*begin == '('){
-        begin++;
-        int t = expression(begin);
-        begin++;
-        cout<<"fact"<<t<<endl;
-        return t;
-    }else{
-        int ret=number(begin);
-        cout<<"fact"<<ret<<endl;
-        return ret;
+
+using namespace atcoder;
+
+using mint = modint1000000007;
+//using mint = modint;
+
+
+//弧度法の角度から度数法へ
+double rad2deg(double rad){
+    return rad * (180 / M_PI);
+}
+
+
+
+
+const long double EPS=1e-14;
+#define PI 3.14159265359
+
+void printArray2(string name,vector<V>& a){
+    cout<<name<<endl;
+    rep(i,0,a.size()){
+        rep(j,0,a[i].size()){
+            cout<<a[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+}
+
+void printArray(string name,vector<ll>& a){
+    cout<<name<<endl;
+    rep(i,0,a.size()){
+        cout<<a[i]<<" ";
+    }
+    cout<<endl;
+    cout<<endl;
+}
+
+//小数点12桁
+struct all_init
+{
+    all_init()
+    {
+        cout << fixed << setprecision(12);
+    }
+} All_init;
+
+class SegmentTree{
+    public:
+    ll dat[300000];
+    ll siz=1;
+
+    void init(ll n){
+        siz=1;
+        while(siz<n){
+            siz*=2;
+        }
+        rep(i,1,siz*2){
+            dat[i]=0;
+        }
+    }
+
+    void update(ll pos,ll x){
+        pos=pos+siz-1;
+        dat[pos]=x;
+        while(pos>=2){
+            pos/=2;
+            dat[pos]=dat[pos*2]+dat[pos*2+1];
+        }
+    }
+
+    ll query(ll l,ll r,ll a,ll b,ll u){
+        if(a>=r||b<=l){
+            return 0;
+        }
+        if(l<=a&&b<=r){
+            return dat[u];
+        }
+        ll m=(a+b)/2;
+        ll suml=query(l,r,a,m,u*2);
+        ll sumr=query(l,r,m,b,u*2+1);
+        return suml+sumr;
+    }
+};
+SegmentTree Z;
+
+
+
+using S = long long;
+using F = long long;
+
+const S INF = 8e18;
+const F ID = 8e18;
+
+S op(S a, S b){ return std::min(a, b); }
+S e(){ return INF; }
+S mapping(F f, S x){ return (f == ID ? x : f); }
+F composition(F f, F g){ return (f == ID ? g : f); }
+F id(){ return ID; }
+
+vector<vector<ll>>cm(70,vector<ll>(70,-1));
+
+ll com3(ll a,ll b){
+    if(cm[a][b]!=-1){
+        return cm[a][b];
+    }
+    else if(a==b||b==0){
+        return cm[a][b]=1;
+    }
+    else if(b==1){
+        return cm[a][b]=a;
+    }
+    else{
+        return cm[a][b]=com3(a-1,b-1)+com3(a-1,b);
     }
 }
 
-// 数字の列をパースして、その数を返す。
-int number(State &begin) {
-    int ret = 0;
 
-    while (isdigit(*begin)) {
-        ret *= 10;
-        ret += *begin - '0';
-        begin++;
-    }
-    cout<<"num"<<ret<<endl;
-    return ret;
-}
-//graph=vector<vector<ll>>
 
 int main() {
     ll n,m;
     cin>>n>>m;
-    graph g(n),g1(n);
-    vector<ll>ax(n);
+    vector<vector<ll>>dist(n,vector<ll>(n,LLONG_MAX));
     rep(i,0,m){
-        ll a,b;
-        cin>>a>>b;
+        ll a,b,c;
+        cin>>a>>b>>c;
         --a,--b;
-        g[a].push_back(b);
-        g[b].push_back(a);
+        dist[a][b]=c;
     }
-    sort(all(g));
     rep(i,0,n){
-        ax[i]=i;
+        dist[i][i]=0;
     }
-    vector<P>bx;
-    rep(i,0,m){
-        ll x,y;
-        cin>>x>>y;
-        --x,--y;
-        bx.push_back({x,y});
-    }
-    bool flag=false;
-    do{
-        rep(i,0,bx.size()){
-            g1[ax[bx[i].first]].push_back(ax[bx[i].second]);
-            g1[ax[bx[i].second]].push_back(ax[bx[i].first]);
+    ll ans=0;
+    rep(k,0,n){
+        rep(s,0,n){
+            rep(t,0,n){
+                if(dist[s][k]!=LLONG_MAX&&dist[k][t]!=LLONG_MAX){
+                    chmin(dist[s][t],dist[s][k]+dist[k][t]);
+                    //cout<<dist[s][t]<<endl;
+                    ans+=dist[s][t]; 
+                }
+                else if(dist[s][t]!=LLONG_MAX){
+                    ans+=dist[s][t];
+                }   
+            }
         }
-        sort(all(g1));
-        if(g1==g){
-            flag=true;
-            break;
-        }
-        g1.clear();
-        /*rep(i,0,ax.size()){
-            cout<<ax[i]<<" ";
-        }
-        cout<<endl;*/
-    }while(next_permutation(all(ax)));
-
-    if(flag){
-        cout<<"Yes"<<endl;
     }
-    else{
-        cout<<"No"<<endl;
-    }
-
-
+    cout<<ans<<endl;
 }

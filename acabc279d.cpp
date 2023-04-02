@@ -22,10 +22,12 @@
 #include <bits/stdc++.h>
 #include <cctype>
 #include <atcoder/all>
+#include <random>
 using namespace std;
 typedef string::const_iterator State;
 class ParseError {};
-#define ll long long
+//#define ll long long
+using ll=long long;
 #define rep(i, s, n) for (ll i = (ll)(s); i < (ll)(n); i++)
 #define rrep(i, s, n) for (ll i = (ll)(s); i > (ll)(n); i--)
 #define all(a) (a).begin(), (a).end()
@@ -36,8 +38,17 @@ class ParseError {};
 #define C vector<char>
 #define B vector<bool>
 #define endl '\n'
+
+#ifdef OSUMI_DEBUG
+#include "./debug.hpp"
+#else
+#define printContainer(...)
+#endif
+
+
+
 const ll MAX = 510000;
-const ll MOD =998244353;
+const ll MOD =1e+9+7;
 using graph = vector<vector<ll>>;
 int term(State &begin);
 int number(State &begin);
@@ -362,72 +373,6 @@ __int128 parse(string &s) {
   return ret;
 }
 
-
-//10の9乗+7でmodをとる
-template <std::uint_fast64_t Modulus> class modint {
-  using u64 = std::uint_fast64_t;
-
-public:
-  u64 a;
-
-    constexpr modint(const u64 x = 0) noexcept : a(x % Modulus) {}
-    constexpr u64 &value() noexcept { return a; }
-    constexpr const u64 &value() const noexcept { return a; }
-
-    constexpr modint operator+(const modint rhs) const noexcept {
-        return modint(*this) += rhs;
-    }
-    constexpr modint operator-(const modint rhs) const noexcept {
-        return modint(*this) -= rhs;
-    }
-    constexpr modint operator*(const modint rhs) const noexcept {
-        return modint(*this) *= rhs;
-    }
-    constexpr modint operator/(const modint rhs) const noexcept {
-        return modint(*this) /= rhs;
-    }
-    constexpr modint &operator+=(const modint rhs) noexcept {
-        a += rhs.a;
-        if (a >= Modulus) {
-        a -= Modulus;
-        }
-        return *this;
-    }
-    constexpr modint &operator-=(const modint rhs) noexcept {
-        if (a < rhs.a) {
-            a += Modulus;
-        }
-        a -= rhs.a;
-        return *this;
-    }
-    constexpr modint &operator*=(const modint rhs) noexcept {
-        a = a * rhs.a % Modulus;
-        return *this;
-    }
-    constexpr modint &operator/=(modint rhs) noexcept {
-        u64 exp = Modulus - 2;
-        while (exp) {
-            if (exp % 2) {
-                *this *= rhs;
-            }
-            rhs *= rhs;
-            exp /= 2;
-        }
-        return *this;
-    }
-};
-
-
-
-//小数点12桁
-struct all_init
-{
-    all_init()
-    {
-        cout << fixed << setprecision(30);
-    }
-} All_init;
-
 //Bit
 // 1-indexedなので注意。
  struct BIT {
@@ -453,68 +398,6 @@ struct all_init
      return ret;
    }
  };
-
-
-
-
-
-/* SegTree<X>(n,fx): モノイド(集合X, 二項演算fx)についてサイズnで構築
-    set(int i, X x), build(): i番目の要素をxにセット。まとめてセグ木を構築する。O(n)
-    update(i,x): i 番目の要素を x に更新。O(log(n))
-    query(a,b):  [a,b) 全てにfxを作用させた値を取得。O(log(n))
-*/
-template <typename X>
-struct SegTree {
-    using FX = function<X(X, X)>;
-    int n;
-    FX fx;
-    vector<X> dat;
-    SegTree(int n_, FX fx_): n(), fx(fx_),dat(n_ * 4) {
-        int x = 1;
-        while (n_ > x) {
-            x *= 2;
-        }
-        n = x;
-    }
- 
-    void set(int i, X x) { dat[i + n - 1] = x; }
-    void build() {
-        for (int k = n - 2; k >= 0; k--) dat[k] = min(dat[2 * k + 1], dat[2 * k + 2]);
-    }
- 
-    void update(int i, X x) {
-        i += n - 1;
-        dat[i] = x;
-        while (i > 0) {
-            i = (i - 1) / 2;  // parent
-            dat[i] = fx(dat[i * 2 + 1], dat[i * 2 + 2]);
-        }
-    }
- 
-    // the minimum element of [a,b)
-    X query(int a, int b) { return query_sub(a, b, 0, 0, n); }
-    X query_sub(int a, int b, int k, int l, int r) {
-        if (r <= a || b <= l) {
-            return pow(2,31);
-        } else if (a <= l && r <= b) {
-            return dat[k];
-        } else {
-            X vl = query_sub(a, b, k * 2 + 1, l, (l + r) / 2);
-            X vr = query_sub(a, b, k * 2 + 2, (l + r) / 2, r);
-            return fx(vl, vr);
-        }
-    }
-    /* debug */
-
-    inline X operator[](int a) { return query(a, a + 1); }
-    void print() {
-        for (int i = 0; i < n; ++i) {
-            cout << (*this)[i];
-            if (i != n) cout << ",";
-        }
-        cout << endl;
-    }
-};
 
 
 struct Zip{
@@ -566,7 +449,7 @@ long long modxx(long long val, long long m) {
 }
 
 /*二点間の距離*/
-long double dist(pair<long double, long double> a, pair<long double, long double> b)
+double dist(pair<double, double> a, pair<double, double> b)
 {
     return sqrt(pow((a.first - b.first), 2) + pow((a.second - b.second), 2));
 }
@@ -756,41 +639,160 @@ string long_to_string(long long N,long long k) {
 	return res;
 }
 
+// 1 以上 N 以下の整数が素数かどうかを返す
+vector<bool> Eratosthenes(ll N) {
+    // テーブル
+    vector<bool> isprime(N+1, true);
+
+    // 1 は予めふるい落としておく
+    isprime[1] = false;
+
+    // ふるい
+    for (ll p = 2; p <= N; ++p) {
+        // すでに合成数であるものはスキップする
+        if (!isprime[p]) continue;
+
+        // p 以外の p の倍数から素数ラベルを剥奪
+        for (ll q = p * 2; q <= N; q += p) {
+            isprime[q] = false;
+        }
+    }
+
+    // 1 以上 N 以下の整数が素数かどうか
+    return isprime;
+}
+
 
 using namespace atcoder;
 
 using mint = modint1000000007;
+//using mint = modint;
+
+
+//弧度法の角度から度数法へ
+double rad2deg(double rad){
+    return rad * (180 / M_PI);
+}
 
 
 
 
 const long double EPS=1e-14;
+#define PI 3.14159265359
+
+void printArray2(string name,vector<V>& a){
+    cout<<name<<endl;
+    rep(i,0,a.size()){
+        rep(j,0,a[i].size()){
+            cout<<a[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+}
+
+// void printArray(string name,vector<ll>& a){
+//     cout<<name<<endl;
+//     rep(i,0,a.size()){
+//         cout<<a[i]<<" ";
+//     }
+//     cout<<endl;
+//     cout<<endl;
+// }
+
+//小数点12桁
+struct all_init
+{
+    all_init()
+    {
+        cout << fixed << setprecision(12);
+    }
+} All_init;
+
+class SegmentTree{
+    public:
+    ll dat[300000];
+    ll siz=1;
+
+    void init(ll n){
+        siz=1;
+        while(siz<n){
+            siz*=2;
+        }
+        rep(i,1,siz*2){
+            dat[i]=0;
+        }
+    }
+
+    void update(ll pos,ll x){
+        pos=pos+siz-1;
+        dat[pos]=x;
+        while(pos>=2){
+            pos/=2;
+            dat[pos]=dat[pos*2]+dat[pos*2+1];
+        }
+    }
+
+    ll query(ll l,ll r,ll a,ll b,ll u){
+        if(a>=r||b<=l){
+            return 0;
+        }
+        if(l<=a&&b<=r){
+            return dat[u];
+        }
+        ll m=(a+b)/2;
+        ll suml=query(l,r,a,m,u*2);
+        ll sumr=query(l,r,m,b,u*2+1);
+        return suml+sumr;
+    }
+};
+SegmentTree Z;
+
+
+
+using S = long long;
+using F = long long;
+
+const S INF = 8e18;
+const F ID = 8e18;
+
+S op(S a, S b){ return std::min(a, b); }
+S e(){ return INF; }
+S mapping(F f, S x){ return (f == ID ? x : f); }
+F composition(F f, F g){ return (f == ID ? g : f); }
+F id(){ return ID; }
+
+
+
+ll a,b;
+
+double func(ll m){
+    return (double)b*m+(double)a/sqrt(m+1);
+}
+
 
 
 
 
 int main() {
-    string s;
-    cin>>s;
-    ll k;
-    cin>>k;
-    ll n=s.size();
-    vector<ll>cnt(n+1,0);
-    rep(i,0,n){
-        if(s[i]=='.'){
-            cnt[i+1]=cnt[i]+1;
+    cin>>a>>b;
+    ll ok=0,ng=a/b+1;
+    while(ng-ok>3){
+        ll m1=(ok*2+ng)/3;
+        ll m2=(ok+ng*2)/3;
+        if(func(m1)<func(m2)){
+            ng=m2;
         }
         else{
-            cnt[i+1]=cnt[i];
+            ok=m1;
         }
     }
-    ll ans=0;
-    ll r=0;
-    rep(l,0,n){
-        for(;r<n&&cnt[r+1]-cnt[l]<=k;r++){}
-        chmax(ans,r-l);
+    double ans=a;
+    rep(i,ok,ng){
+        chmin(ans,func(i));
     }
     cout<<ans<<endl;
+
 
 
 }

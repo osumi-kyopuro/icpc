@@ -710,13 +710,13 @@ private:
 
 
 // グラフ、頂点の入次数、頂点数を受け取り、そのトポロジカルソートを記録した配列を返す関数
-vector<ll> topological_sort(vector<vector<ll>> &G2, vector<ll> &indegree, ll V2) {
+vector<int> topological_sort(vector<vector<int>> &G2, vector<int> &indegree, int V2) {
     // トポロジカルソートを記録する配列
-    vector<ll> sorted_vertices;
+    vector<int> sorted_vertices;
 
     // 入次数が0の頂点を発見したら、処理待ち頂点としてキューに追加する
-    queue<ll> que;
-    for (ll i = 0; i < V2; i++) {
+    queue<int> que;
+    for (int i = 0; i < V2; i++) {
         if (indegree[i] == 0) {
             que.push(i);
         }
@@ -725,12 +725,12 @@ vector<ll> topological_sort(vector<vector<ll>> &G2, vector<ll> &indegree, ll V2)
     // キューが空になるまで、操作1~3を繰り返す
     while (que.empty() == false) {
         // キューの先頭の頂点を取り出す
-        ll v = que.front();
+        int v = que.front();
         que.pop();
 
         // その頂点と隣接している頂点の入次数を減らし、0になればキューに追加
-        for (ll i = 0; i < G2[v].size(); i++) {
-            ll u = G2[v][i];
+        for (int i = 0; i < G2[v].size(); i++) {
+            int u = G2[v][i];
             indegree[u] -= 1;
             if (indegree[u] == 0) que.push(u);
         }
@@ -742,9 +742,74 @@ vector<ll> topological_sort(vector<vector<ll>> &G2, vector<ll> &indegree, ll V2)
     return sorted_vertices;
 }
 
+// 四則演算の式をパースして、その評価結果を返す。
+int expression(State &begin) {
+    int ret=term(begin);
+    while(true){
+        if(*begin == '+'){
+            begin++;
+            ret+=term(begin);
+        }
+        else if(*begin == '-'){
+            begin++;
+            ret-=term(begin);
+        }
+        else{
+            break;
+        }
+    }
+    cout<<"expr"<<ret<<endl;
+    return ret;
+}
 
+// 乗算除算の式をパースして、その評価結果を返す。
+int term(State &begin) {
+    int p=factor(begin);
+    while(true){
+        if(*begin == '*'){
+            begin++;
+            p*=factor(begin);
+        }
+        else if(*begin == '/'){
+            begin++;
+            p/=factor(begin);
+        }
+        else{
+            break;
+        }
+    }
+    cout<<"term"<<p<<endl;
+    return p;
+}
 
-string long_to_string(long long N,long long k) {
+int factor(State &begin){
+    if(*begin == '('){
+        begin++;
+        int t = expression(begin);
+        begin++;
+        cout<<"fact"<<t<<endl;
+        return t;
+    }else{
+        int ret=number(begin);
+        cout<<"fact"<<ret<<endl;
+        return ret;
+    }
+}
+
+// 数字の列をパースして、その数を返す。
+int number(State &begin) {
+    int ret = 0;
+
+    while (isdigit(*begin)) {
+        ret *= 10;
+        ret += *begin - '0';
+        begin++;
+    }
+    cout<<"num"<<ret<<endl;
+    return ret;
+}
+
+string long_to_base(long long N,long long k) {
 	if (N == 0) {
 		return "0";
 	}
@@ -759,38 +824,40 @@ string long_to_string(long long N,long long k) {
 
 using namespace atcoder;
 
-using mint = modint1000000007;
-
-
-
-
-const long double EPS=1e-14;
-
+using mint = modint998244353;
 
 
 
 int main() {
-    string s;
-    cin>>s;
-    ll k;
-    cin>>k;
-    ll n=s.size();
-    vector<ll>cnt(n+1,0);
+    ll n,x;
+    cin>>n>>x;
+    vector<P>a(n);
     rep(i,0,n){
-        if(s[i]=='.'){
-            cnt[i+1]=cnt[i]+1;
-        }
-        else{
-            cnt[i+1]=cnt[i];
+        cin>>a[i].first>>a[i].second;
+    }
+    vector<V>dp(10001,V(n+1,false));
+    dp[0][0]=true;
+    rep(i,0,10001){
+        rep(j,0,n){
+            if(!dp[i][j]){
+                continue;
+            }
+            if(i+a[j].first<=10000){
+                dp[i+a[j].first][j+1]=dp[i+a[j].first][j+1]|dp[i][j];    
+            }
+
+            if(i+a[j].second<=10000){
+                dp[i+a[j].second][j+1]=dp[i+a[j].second][j+1]|dp[i][j];    
+            }
         }
     }
-    ll ans=0;
-    ll r=0;
-    rep(l,0,n){
-        for(;r<n&&cnt[r+1]-cnt[l]<=k;r++){}
-        chmax(ans,r-l);
+
+    if(dp[x][n]){
+        cout<<"Yes"<<endl;
     }
-    cout<<ans<<endl;
+    else{
+        cout<<"No"<<endl;
+    }
 
-
+    
 }
