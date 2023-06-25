@@ -43,6 +43,7 @@ using ll=long long;
 #include "./debug.hpp"
 #else
 #define printContainer(...)
+#define printHugaHuga(...)
 #endif
 
 
@@ -50,10 +51,6 @@ using ll=long long;
 const ll MAX = 510000;
 const ll MOD =1e+9+7;
 using graph = vector<vector<ll>>;
-int term(State &begin);
-int number(State &begin);
-int expression(State &begin);
-int factor(State &begin);
 struct edge{
     //辺の重みを管理できるような構造体
 	//コンストラクタによって簡単に値を入れられるようにしている
@@ -202,29 +199,11 @@ double ism(double aa, ll p)
     }
     return ans;
 }
-// //繰り返し自乗法(アマリトリバージョン)
-// ll ismm(ll aa, ll p,ll m)
-// {
-//     ll ap = aa;
-//     ll ans = 1;
-//     while (p > 0)
-//     {
-//         //cout<<"p="<<p<<",ap="<<ap<<endl;
-//         if (p & 1)
-//         { //奇数が真
-//             ans = (ans * ap) % m;
-//         }
-//         p /= 2;
-//         ap = (ap * ap) % m;
-//     }
-//     return ans;
-// }
-
 //繰り返し自乗法(アマリトリバージョン)
-__int128 ismm(__int128 aa, __int128 p,__int128 m)
+ll ismm(ll aa, ll p,ll m)
 {
-    __int128 ap = aa;
-    __int128 ans = 1;
+    ll ap = aa;
+    ll ans = 1;
     while (p > 0)
     {
         //cout<<"p="<<p<<",ap="<<ap<<endl;
@@ -237,6 +216,7 @@ __int128 ismm(__int128 aa, __int128 p,__int128 m)
     }
     return ans;
 }
+
 
 
 ll oddXOR(ll a) { return (a+1)/2 % 2; }
@@ -651,8 +631,8 @@ vector<bool> Eratosthenes(ll N) {
 
 using namespace atcoder;
 
-//using mint = modint1000000007;
-using mint = modint;
+using mint = modint1000000007;
+// using mint = modint;
 
 
 //弧度法の角度から度数法へ
@@ -666,30 +646,10 @@ double rad2deg(double rad){
 const long double EPS=1e-14;
 #define PI 3.14159265359
 
-void printArray2(string name,vector<V>& a){
-    cout<<name<<endl;
-    rep(i,0,a.size()){
-        rep(j,0,a[i].size()){
-            cout<<a[i][j]<<" ";
-        }
-        cout<<endl;
-    }
-    cout<<endl;
-}
-
-void printArray(string name,vector<ll>& a){
-    cout<<name<<endl;
-    rep(i,0,a.size()){
-        cout<<a[i]<<" ";
-    }
-    cout<<endl;
-    cout<<endl;
-}
-
 //小数点12桁
 struct all_init
 {
-    all_init()
+    all_init()   
     {
         cout << fixed << setprecision(12);
     }
@@ -748,13 +708,186 @@ S mapping(F f, S x){ return (f == ID ? x : f); }
 F composition(F f, F g){ return (f == ID ? g : f); }
 F id(){ return ID; }
 
+/* Initial processing  */
+struct Preprocessing { Preprocessing() { std::cin.tie(0); std::ios::sync_with_stdio(0); }; }_Preprocessing;
 
+
+vector<vector<string>>s(4);
+vector<vector<string>>t(4);
 
 
 
 int main() {
+    // vector<string>a={"osumi","oosumi"};
+    // printHugaHuga("a",a);
+    // std::mt19937 mt{ std::random_device{}() };
+
     
+    // std::uniform_int_distribution<int> distab(2, 3),dt(0,4),distx(5,5);
     
+    vector<pair<ll,ll>>hw(3);
+    rep(k,0,3){
+        cin>>hw[k].first>>hw[k].second;
+        t[k].resize(hw[k].first);
+        rep(i,0,hw[k].first){
+            cin>>t[k][i];
+        }
 
         
+        // if(k==2){
+        //     hw[k].first=distx(mt);
+        //     hw[k].second=distx(mt);
+        // }
+        // else{
+        //     hw[k].first=distab(mt);
+        //     hw[k].second=distab(mt);    
+        // }
+        // t[k].resize(hw[k].first);
+        // rep(i,0,hw[k].first){
+        //     t[k][i].resize(hw[k].second);
+        //     rep(j,0,hw[k].second){
+        //         //printHugaHuga("p",dt(mt));
+        //         t[k][i][j]=(dt(mt)==0?'#':'.');
+        //         //printHugaHuga("t",t[k][i][j]);
+        //     }
+        // }
+    }
+    printHugaHuga("t",t);
+
+    // rep(k,0,3){
+    //     if(k==2){
+    //         cout<<"tX"<<endl;
+    //     }
+    //     else{
+    //         cout<<"t"<<(char)('A'+k)<<endl;
+    //     }
+    //     // rep(i,0,t[k].size()){
+    //     //     rep(j,0,t[k][i].size()){
+    //     //         cout<<t[k][i][j];
+    //     //     }
+    //     //     cout<<endl;
+    //     // }
+    // }
+
+    vector<ll>minh(3,9),maxh(3,0),minw(3,9),maxw(3,0);
+    rep(k,0,3){
+        auto [h,w]=hw[k];
+        rep(i,0,h){
+            rep(j,0,w){
+                if(t[k][i][j]=='#'){
+                    chmin(minh[k],i);
+                    chmin(minw[k],j);
+                    chmax(maxh[k],i);
+                    chmax(maxw[k],j);
+                }
+            }
+        }
+        // if(k==2){
+        //     cout<<"tX"<<endl;
+        // }
+        // else{
+        //     cout<<"t"<<(char)('A'+k)<<endl;
+        // }
+        // cout<<"minh"<<minh[k]<<endl;
+        // cout<<"minw"<<minw[k]<<endl;
+        // cout<<"maxh"<<maxh[k]<<endl;
+        // cout<<"maxw"<<maxw[k]<<endl;
+
+    }
+    
+
+    rep(k,0,3){
+        ll py=0,px=0;
+        s[k].resize(maxh[k]-minh[k]+1);
+        rep(i,minh[k],maxh[k]+1){
+            s[k][i-minh[k]].resize(maxw[k]-minw[k]+1);
+        }
+        
+        rep(i,minh[k],maxh[k]+1){
+            rep(j,minw[k],maxw[k]+1){
+                s[k][i-minh[k]][j-minw[k]]=t[k][i][j];
+            }
+        }
+    }
+    printHugaHuga("s",s);
+    if(s[0].size()>s[2].size()||s[0][0].size()>s[2][0].size()){
+        cout<<"No"<<endl;
+        exit(0);
+    }
+    if(s[1].size()>s[2].size()||s[1][0].size()>s[2][0].size()){
+        cout<<"No"<<endl;
+        exit(0);
+    }
+
+    s[3].resize(20);
+    rep(i,0,10){
+        s[3][i].resize(20,'.');
+    }
+
+
+   
+    //printHugaHuga("t",t);
+    ///printHugaHuga("s",s);
+    bool flag=false;
+    rep(mha,0,s[2].size()-s[0].size()+1){
+        rep(mwa,0,s[2][0].size()-s[0][0].size()+1){
+            rep(mhb,0,s[2].size()-s[1].size()+1){
+                rep(mwb,0,s[2][0].size()-s[1][0].size()+1){
+                    bool tflag=true;
+                    ll bh=max(s[1].size(),s[0].size());
+                    ll bw=max(s[1][0].size(),s[0][0].size());
+                    ll sh=min(s[1].size(),s[0].size());
+                    ll sw=min(s[1][0].size(),s[0][0].size());
+                    rep(i,0,10){
+                        rep(j,0,10){
+                            s[3][i][j]='.';
+                        }
+                    }
+                    rep(i,0,10){
+                        rep(j,0,10){
+                            if(i<s[0].size()&&j<s[0][0].size()&&s[0][i][j]=='#'){
+                                s[3][i+mha][j+mwa]='#';
+                            }
+                            if(i<s[1].size()&&j<s[1][0].size()&&s[1][i][j]=='#'){
+                                s[3][i+mhb][j+mwb]='#';
+                            }
+                        }
+                    }
+                    if(s[0].size()>s[2].size()||s[0][0].size()>s[2][0].size()){
+                        tflag=false;
+                    }
+                    if(s[1].size()>s[2].size()||s[1][0].size()>s[2][0].size()){
+                        tflag=false;
+                    }
+
+                    rep(i,0,s[2].size()){
+                        rep(j,0,s[2][0].size()){
+                            if(s[2][i][j]!=s[3][i][j]){
+                                tflag=false;
+                            }
+                        }
+                    }
+                    
+
+
+                    if(tflag){
+                        flag=true;
+                        printHugaHuga("c",s[3]);
+                    }
+                }
+            }
+        }
+    }
+
+    if(flag){
+        cout<<"Yes"<<endl;
+    }
+    else{
+        cout<<"No"<<endl;
+    }
+
+
+
+
+
 }

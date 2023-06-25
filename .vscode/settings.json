@@ -55,7 +55,16 @@
         "xutility": "cpp",
         "numeric": "cpp",
         "random": "cpp",
-        "array": "cpp"
+        "array": "cpp",
+        "__hash_table": "cpp",
+        "__split_buffer": "cpp",
+        "__tree": "cpp",
+        "bitset": "cpp",
+        "regex": "cpp",
+        "span": "cpp",
+        "string_view": "cpp",
+        "unordered_set": "cpp",
+        "valarray": "cpp"
     },
     "java.home": "C:/Program Files/Java/jdk-14.0.1/bin",
     "C_Cpp.errorSquiggles": "Disabled"

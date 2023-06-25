@@ -715,80 +715,39 @@ F id(){ return ID; }
 struct Preprocessing { Preprocessing() { std::cin.tie(0); std::ios::sync_with_stdio(0); }; }_Preprocessing;
 
 
-vector<vector<string>>s(4);
-vector<vector<string>>t(4);
-
 
 
 int main() {
-    ll ha,wa;
-    cin>>ha>>wa;
-    vector<string>sa(ha);
-    set<pair<ll,ll>>ba,bb,bx;
-    rep(i,0,ha){
-        cin>>sa[i];
-    }
-    ll hb,wb;
-    cin>>hb>>wb;
-    vector<string>sb(ha);
-    rep(i,0,ha){
-        cin>>sb[i];
-    }
-
-    ll hx,wx;
-    cin>>hx>>wx;
-    vector<string>sx(hx);
-    rep(i,0,hx){
-        cin>>sx[i];
-    }
-
-
-    rep(i,0,ha){
-        rep(j,0,wa){
-            if(sa[i][j]=='#'){
-                ba.push_back({i,j});
-            }
-        }
-    }
-
-    rep(i,0,hb){
-        rep(j,0,wb){
-            if(sb[i][j]=='#'){
-                bb.push_back({i,j});
-            }
-        }
-    }
-
-    rep(i,0,hx){
-        rep(j,0,wx){
-            if(sx[i][j]=='#'){
-                bx.push_back({i,j});
-            }
+    ll n,m;
+    cin>>n>>m;
+    graph g(n+m);
+    rep(i,0,n){
+        ll a;
+        cin>>a;
+        rep(j,0,a){
+            ll b;
+            cin>>b;
+            --b;
+            g[b].push_back(m+i);
+            g[m+i].push_back(b);
         }
     }
 
 
-    rep(i,0,ba.size()){
-        ba[i].first-=ba[0].first;
-        ba[i].second-=ba[0].second;
+    queue<ll>que;
+    que.push(0);
+    vector<ll>dist(n+m,-1);
+    dist[0]=0;
+    while(!que.empty()){
+        ll p=que.front();
+        que.pop();
+        for(auto x:g[p]){
+            if(dist[x]==-1){
+                que.push(x);
+                dist[x]=dist[p]+1;    
+            }
+        }
     }
-    rep(i,0,bb.size()){
-        bb[i].first-=bb[0].first;
-        bb[i].second-=bb[0].second;
-    }
-    rep(i,0,bx.size()){
-        bx[i].first-=bx[0].first;
-        bx[i].second-=bx[0].second;
-    }
-
-
-    vector<bool>hc(bx.size());
-
-
-    
-
-
-
-
+    cout<<(dist[m-1]-dist[0]-2)/2<<endl;    
 
 }
